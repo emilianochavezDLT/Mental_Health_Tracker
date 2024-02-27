@@ -35,22 +35,27 @@
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">Mental Health Tracker</h1>
         </div>
+        <!-- App Description -->
+          <div class = "app-description">
+            <h2>Welcome to the Mental Health Tracker</h2>
+            <p>MHA is designed to help you track your mood, thoughts, and emotions. We encourage you to reflect on your day. Here, you can journal your thoughts, monitor your mood and gain insights into your well-being over time. Get started by logging your first entry today!</p>
+        </div>
         <!-- Your content here -->
         <div class="row 1">
           <div class="col-sm-6">
             <div class="card text-center">
-              <div class="card-body stretched-link text-decoration-none" href>
+              <a class="card-body stretched-link text-decoration-none" href="{% url 'journal_entry' %}">
                 <h5 class="card-title">Todays Journal</h5>
                 <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              </div>
+              </a>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="card text-center">
-              <div class="card-body stretched-link text-decoration-none" href="/">
+              <a class="card-body stretched-link text-decoration-none" href="/">
                 <h5 class="card-title-center">Calendar</h5>
                 <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              </div>
+              </a>
             </div>
           </div>
         </div>
@@ -58,29 +63,22 @@
         <div class="row 2 mt-4">
           <div class="col-sm-6">
             <div class="card text-center">
-              <div class="card-body stretched-link text-decoration-none" href>
+              <a class="card-body stretched-link text-decoration-none" href>
                 <h5 class="card-title-center">Analytics</h5>
                 <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              </div>
+              </a>
             </div>
           </div>
           <div class="col-sm-6">
             <div class="card text-center">
-              <div class="card-body stretched-link text-decoration-none" href="/">
+              <a class="card-body stretched-link text-decoration-none" href="/">
                 <h5 class="card-title">Login</h5>
                 <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              </div>
+              </a>
             </div>
           </div>
         </div>
         <div class="container pt-4">
-            <!-- App Description -->
-          <div class = "app-description">
-            <h2>Welcome to the Mental Health Tracker</h2>
-            <p>MHA is designed to help you track your mood, thoughts, and emotions. We encourage you to reflect on your day. Here, you can journal your thoughts, monitor your mood and gain insights into your well-being over time. Get started by logging your first entry today!</p>
-            <!-- Button Link for Journal Entry -->
-            <a class = "btn btn-primary" href="{% url 'journal_entry' %}" role="button">Log Your Entry! </a>
-        </div>
       </main>
     </div>
   </div>
