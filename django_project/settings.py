@@ -16,6 +16,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> e2d8f31d62be1cad503309c3ffbd0942671ef804
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -37,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'mh_tracker',
+
 ]
 
 MIDDLEWARE = [
@@ -70,6 +77,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
+
+
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -80,11 +90,28 @@ DATABASES = {
     }
 }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
+<<<<<<< HEAD
+
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+
+
+=======
+>>>>>>> e2d8f31d62be1cad503309c3ffbd0942671ef804
         'NAME':
         'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -99,6 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
         'django.contrib.auth.password_validation.NumericPasswordValidator',
+
     },
 ]
 
@@ -112,6 +140,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
