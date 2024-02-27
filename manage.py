@@ -20,5 +20,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+<<<<<<< HEAD
 
 #https://OsvaldoCanales:acces_token@github.com/UCCS-4300-5300/group7-spring2024.git
+=======
+>>>>>>> 96082fc1d8932ea52ff5e3e53bf713fc622e96ef
