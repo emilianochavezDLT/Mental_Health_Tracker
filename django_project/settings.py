@@ -16,8 +16,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> e2d8f31d62be1cad503309c3ffbd0942671ef804
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -93,6 +96,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
+<<<<<<< HEAD
 
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -106,6 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
 
 
+=======
+>>>>>>> e2d8f31d62be1cad503309c3ffbd0942671ef804
         'NAME':
         'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -123,7 +129,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
