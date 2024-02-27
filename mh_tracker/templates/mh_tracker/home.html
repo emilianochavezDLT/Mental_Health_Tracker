@@ -1,22 +1,50 @@
 {% extends "mh_tracker/base_template.html" %}
 
 {% block content %}
-    <!--Main Navigation-->
-    <header>
-        <!-- Sidebar -->
-        <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
-            <div class="position-sticky">
-                <div class="list-group list-group-flush mx-3 mt-4">
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
-                        <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Todays Journal</span>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
-                            class="fas fa-chart-line fa-fw me-3"></i><span>Analytics</span></a>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <h1>History</h1>
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">
+              <i class="fas fa-tachometer-alt"></i>
+              Today's Journal
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="fas fa-chart-line"></i>
+              Analytics
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <i class="fas fa-calendar"></i>
+              Calendar
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple"><i
-                            class="fas fa-calendar fa-fw me-3"></i><span>Calendar</span></a>
-                </div>
+    <!-- Main content -->
+    <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Mental Health Tracker</h1>
+      </div>
+      <!-- Your content here -->
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Special title treatment</h5>
+              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
+
         </nav>
         <!-- Sidebar -->
     </header>
@@ -32,50 +60,21 @@
             <!-- Button Link for Journal Entry -->
             <a class = "btn btn-primary" href="{% url 'journal_entry' %}" role="button">Log Your Entry! </a>
         </div>
+
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Special title treatment</h5>
+              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
-    <!--Main layout-->
-
-    <style>
-        body {
-            background-color: #fbfbfb;
-        }
-        @media (min-width: 991.98px) {
-            main {
-                padding-left: 240px;
-            }
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            padding: 58px 0 0; /* Height of navbar */
-            box-shadow: 0 2px 5px 0 rgb(0 0 0 / 5%), 0 2px 10px 0 rgb(0 0 0 / 5%);
-            width: 240px;
-            z-index: 600;
-        }
-
-        @media (max-width: 991.98px) {
-            .sidebar {
-                width: 100%;
-            }
-        }
-
-        .sidebar .active {
-            border-radius: 5px;
-            box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
-        }
-
-        .sidebar-sticky {
-            position: relative;
-            top: 0;
-            height: calc(100vh - 48px);
-            padding-top: 0.5rem;
-            overflow-x: hidden;
-            overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-        }
-    </style>
-
+  </div>
+</div>
 {% endblock %}
