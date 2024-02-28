@@ -15,10 +15,31 @@ incorporates models. -->
   <form method ="post">
     {% csrf_token %}
     <div class="mb-3">
-      <!-- Labels -->
-      <label for="journalDescription" class="form-label">Today's Journal</label>
+      <!-- Mood Rating -->
+      <label for="journalDescription" class="form-label">Current Mood Level (Bad(1) - Good(5)): </label>
+      <!-- Text Area --> 
+      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <!-- Sleep Rating --> 
+      <label for="journalDescription" class="form-label">Rate Your Sleep Last Night (No Energy(1) - Fully Energized(5)): </label>
+      <!-- Text Area --> 
+      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <!-- Exercise Rating -->
+      <label for="journalDescription" class="form-label">Exercise Time (in minutes): </label>
+      <!-- Text Area --> 
+      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <!-- Diet Rating -->
+      <label for="journalDescription" class="form-label">How Healthy Was Your Diet (Over Processed(1) - Very Healthy(5)): </label>
+      <!-- Text Area --> 
+      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <!-- Water Rating -->
+      <label for="journalDescription" class="form-label">Water Intake (Under 8oz(1) - About 32oz(3) - 64oz(5)): </label>
+      <!-- Text Area --> 
+      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <!-- Journal -->
+      <label for="journalDescription" class="form-label">Reflect on your day and take notes of how you felt: </label>
       <!-- Text Area --> 
       <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="3"></textarea>
+      
     </div>
     <!-- Submit button -->
     <button type = "submit" class = "btn btn-primary">Submit</button>
