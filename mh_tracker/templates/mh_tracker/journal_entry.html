@@ -1,0 +1,28 @@
+<!--Description: Journal Entry Page
+    Oz Note: I believe we need models to create a typical forms page; forms.py that 
+incorporates models. -->
+
+{% extends "mh_tracker/base_template.html" %}
+
+{% block content %}
+<div class = "container">
+  <h2> Journal Entry</h2>
+  <!-- Introduction -->
+  <p> Welcome to your personal journal entry. Here we encourage you to reflect on your day, jot down your thoughts, and rate your mood. This is a space for your personal growth and reflection. Feel free to come by anytime! You matter!</p>
+
+  
+  <!-- Journal Entry Form -->
+  <form method ="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <!-- Labels -->
+      <label for="journalDescription" class="form-label">Today's Journal</label>
+      <!-- Text Area --> 
+      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="3"></textarea>
+    </div>
+    <!-- Submit button -->
+    <button type = "submit" class = "btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock %}
+    

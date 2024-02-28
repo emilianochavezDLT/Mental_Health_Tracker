@@ -1,41 +1,88 @@
-{% extends "mh_tracker/base_template.html" %}
+  {% extends "mh_tracker/base_template.html" %}
 
-{% block content %}
-<div class="container-fluid">
-  <div class="row">
-    <!-- Sidebar -->
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div class="position-sticky pt-3">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
-              <i class="fas fa-tachometer-alt"></i>
-              Today's Journal
-            </a>
+  {% block content %}
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+          <meta name ="viewport" content ="width=device-width, initial-scale=1">
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+          <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+          <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+          </head>
+          <body>
+          <div class="row">
+          <div class="col-3">
+          <ul class ="nav navbar-nav">
+          <li class ="nav-item">
+          <a class ="nav-link" href="#"> Today's Journal </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="fas fa-chart-line"></i>
-              Analytics
-            </a>
+          <li class ="nav-item">
+          <a class ="nav-link" href="#"> Calander </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="fas fa-calendar"></i>
-              Calendar
-            </a>
+          <li class ="nav-item">
+          <a class ="nav-link" href="#"> Analytics </a>
           </li>
-        </ul>
-      </div>
-    </nav>
+          <li class ="nav-item">
+          <a class ="nav-link" href="#"> Settings </a>
+          </li>
+          </ul>
+          </nav>
+          </div>
+          <div class="col-9">
+          <div class="container">
+        </div>
+      </nav>
 
-    <!-- Main content -->
-    <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-      </div>
-      <!-- Your content here -->
-    </main>
+      <!-- Main content -->
+      <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Mental Health Tracker</h1>
+        </div>
+        <!-- App Description -->
+          <div class = "app-description">
+            <h2>Welcome to the Mental Health Tracker</h2>
+            <p>MHA is designed to help you track your mood, thoughts, and emotions. We encourage you to reflect on your day. Here, you can journal your thoughts, monitor your mood and gain insights into your well-being over time. Get started by logging your first entry today!</p>
+        </div>
+        <!-- Your content here -->
+        <div class="row 1">
+          <div class="col-sm-6">
+            <div class="card text-center">
+              <a class="card-body stretched-link text-decoration-none" href="{% url 'journal_entry' %}">
+                <h5 class="card-title">Todays Journal</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card text-center">
+              <a class="card-body stretched-link text-decoration-none" href="/">
+                <h5 class="card-title-center">Calendar</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row 2 mt-4">
+          <div class="col-sm-6">
+            <div class="card text-center">
+              <a class="card-body stretched-link text-decoration-none" href>
+                <h5 class="card-title-center">Analytics</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card text-center">
+              <a class="card-body stretched-link text-decoration-none" href="/">
+                <h5 class="card-title">Login</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="container pt-4">
+      </main>
+    </div>
   </div>
-</div>
-{% endblock %}
+  {% endblock %}

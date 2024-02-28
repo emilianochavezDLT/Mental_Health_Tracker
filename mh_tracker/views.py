@@ -1,6 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 # Create your views here.
 def home(request):
   return render(request, 'mh_tracker/home.html')
+
+#User can long in their journal entry
+def journal_entry(request):
+  if request.method == 'POST':
+    #Redirect to the homepage
+    return redirect('home')
+  else:
+    #Render the form
+    return render(request, 'mh_tracker/journal_entry.html')
