@@ -7,9 +7,12 @@
     <link href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" rel="stylesheet">
   </head>
   <body>
+    <header>
+      <h2>Working Title</h2>
+    </header>
   <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-2">
+    <div class="col-sm-2 nav-column">
       <ul class="nav flex-column">
         <li class="nav-item">
           <a class="nav-link" href="{% url 'home'%}">Home</a>
@@ -24,7 +27,7 @@
           <a class="nav-link" href="#">Analytics</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Settings</a>
+          <a class="nav-link" href="{% url 'settings' %}">Settings</a>
         </li>
       </ul>
     </div>
@@ -52,5 +55,23 @@
     .nav_br{
       width:300vmax;
     }
+    .nav-column { 
+      color: white; 
+    }
+    .nav-link {
+      background-color: white;     
+      border: none; 
+      padding: 10px 20px; 
+      margin-bottom: 5px; 
+      margin-top: 5px; 
+      display: block; 
+      text-align: left; 
+      text-decoration: none; 
+      border-radius: 5px;
+    }
+    .nav-link:hover {
+      background-color: #eee; 
+    }
   </style>
 </html>
+        
