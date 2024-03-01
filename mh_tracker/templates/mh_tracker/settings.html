@@ -1,0 +1,22 @@
+{% extends "mh_tracker/base_template.html" %}
+
+{% block content %}
+<div class="container">
+  {% if user.is_authenticated %}
+    <!-- Display settings for logged-in user -->
+    <h1>Welcome, {{ user.username }}</h1>
+    <!-- Add your settings options here for logged-in users -->
+    <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+  {% else %}
+    <!-- Display login/signup form for non-logged-in users -->
+    <h1>Login or Sign Up</h1>
+    <!-- Add your login/signup form here -->
+    <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <!-- Add your login form fields here -->
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <a href="{% url 'signup' %}" class="btn btn-secondary">Sign Up</a>
+  {% endif %}
+</div>
+{% endblock %}
