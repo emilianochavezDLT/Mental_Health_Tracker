@@ -45,3 +45,11 @@ def signup(request):
   else:
     #Render the form
     return render(request, 'mh_tracker/signup.html')
+
+def analytics(request):
+  if request.method == 'POST':
+    #Redirect to the homepage
+    return redirect('home')
+  else:
+    #Render the form
+    return render(request, 'mh_tracker/analytics.html')
