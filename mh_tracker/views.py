@@ -13,3 +13,11 @@ def journal_entry(request):
   else:
     #Render the form
     return render(request, 'mh_tracker/journal_entry.html')
+
+def color_calendar(request):
+  if request.method == 'POST':
+    #Redirect to the homepage
+    return redirect('home')
+  else:
+    #Render the form
+    return render(request, 'mh_tracker/color_calender.html')

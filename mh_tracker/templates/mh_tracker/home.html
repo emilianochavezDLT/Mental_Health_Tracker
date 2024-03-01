@@ -9,30 +9,6 @@
           <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
           <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
           </head>
-          <body>
-          <div class="row">
-          <div class="col-2">
-          <ul class ="nav navbar-nav">
-          <li class ="nav-item">
-          <a class ="nav-link" href="{% url 'journal_entry' %}"> Today's Journal </a>
-          </li>
-          <li class ="nav-item">
-          <a class ="nav-link" href="#"> Calander </a>
-          </li>
-          <li class ="nav-item">
-          <a class ="nav-link" href="#"> Analytics </a>
-          </li>
-          <li class ="nav-item">
-          <a class ="nav-link" href="#"> Settings </a>
-          </li>
-          </ul>
-          </nav>
-          </div>
-          <div class="col-9">
-          <div class="container">
-        </div>
-      </nav>
-
             <!-- Main content -->
                 <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
                   <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -55,7 +31,7 @@
                     </div>
                     <div class="col-sm-6">
                       <div id="card_bg" class="card text-center">
-                        <a class="card-body stretched-link text-decoration-none" href="/">
+                        <a class="card-body stretched-link text-decoration-none" href="{% url 'color_calendar' %}">
                           <h5 class="card-title-center text-warning">Calendar</h5>
                           <p class="card-text text-warning">View Past Journal Entries And Monthly Overview.</p>
                         </a>
