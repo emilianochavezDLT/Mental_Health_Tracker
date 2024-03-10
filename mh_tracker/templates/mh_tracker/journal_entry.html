@@ -4,46 +4,203 @@ incorporates models. -->
 
 {% extends "mh_tracker/base_template.html" %}
 
-{% block content %}
-<div class = "container">
-  <h2> Journal Entry</h2>
-  <!-- Introduction -->
-  <p> Welcome to your personal journal entry. Here we encourage you to reflect on your day, jot down your thoughts, and rate your mood. This is a space for your personal growth and reflection. Feel free to come by anytime! You matter!</p>
+<style>
+  fieldset {
+    overflow: hidden;
+  }
 
-  
+  .some-class {
+    float: left;
+    clear: none;
+  }
+
+  label {
+    float: left;
+    clear: none;
+    display: block;
+    padding: 0px 1em 0px 8px;
+  }
+
+  input[type="radio"],
+  input.radio {
+    float: left;
+    clear: none;
+    margin: 2px 0 0 2px;
+  }
+</style>
+
+{% block content %}
+<div class="container">
+  <h2>Journal Entry</h2>
+  <!-- Introduction -->
+  <p>
+    Welcome to your personal journal entry. Here we encourage you to reflect on
+    your day, jot down your thoughts, and rate your mood. This is a space for
+    your personal growth and reflection. Feel free to come by anytime! You
+    matter!
+  </p>
+
   <!-- Journal Entry Form -->
-  <form method ="post">
+  <form method="post">
     {% csrf_token %}
     <div class="mb-3">
       <!-- Mood Rating -->
-      <label for="journalDescription" class="form-label">Current Mood Level (Bad(1) - Good(5)): </label>
-      <!-- Text Area --> 
-      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
-      <!-- Sleep Rating --> 
-      <label for="journalDescription" class="form-label">Rate Your Sleep Last Night (No Energy(1) - Fully Energized(5)): </label>
-      <!-- Text Area --> 
-      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <label for="journalDescription" class="form-label"
+        >Current Mood Level (Bad(1) - Good(5)):
+      </label>
+      <!-- Radio Button Area -->
+      <fieldset>
+        <div class="some-class">
+          <input type="radio" id="mood_one" name="mood" value="mood_one" />
+          <label for="mood_one">1</label>
+          <input type="radio" id="mood_two" name="mood" value="mood_two" />
+          <label for="mood_two">2</label>
+          <input type="radio" id="mood_three" name="mood" value="mood_three" />
+          <label for="mood_three">3</label>
+          <input type="radio" id="mood_four" name="mood" value="mood_four" />
+          <label for="mood_four">4</label>
+          <input type="radio" id="mood_five" name="mood" value="mood_five" />
+          <label for="mood_five">5</label>
+        </div>
+      </fieldset>
+      <!-- Sleep Rating -->
+      <label for="journalDescription" class="form-label"
+        >Rate Your Sleep Last Night (No Energy(1) - Fully Energized(5)):
+      </label>
+      <!-- Radio Button Area -->
+      <fieldset>
+        <div class="some-class">
+          <input
+            type="radio"
+            id="energy_one"
+            name="energy"
+            value="energy_one"
+          />
+          <label for="energy_one">1</label>
+          <input
+            type="radio"
+            id="energy_two"
+            name="energy"
+            value="energy_two"
+          />
+          <label for="energy_two">2</label>
+          <input
+            type="radio"
+            id="energy_three"
+            name="energy"
+            value="energy_three"
+          />
+          <label for="energy_three">3</label>
+          <input
+            type="radio"
+            id="energy_four"
+            name="energy"
+            value="energy_four"
+          />
+          <label for="energy_four">4</label>
+          <input
+            type="radio"
+            id="energy_five"
+            name="energy"
+            value="energy_five"
+          />
+          <label for="energy_five">5</label>
+        </div>
+      </fieldset>
       <!-- Exercise Rating -->
-      <label for="journalDescription" class="form-label">Exercise Time (in minutes): </label>
-      <!-- Text Area --> 
-      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <label for="journalDescription" class="form-label"
+        >Exercise Time (in minutes):
+      </label>
+      <!-- Radio Button Area -->
+      <fieldset>
+        <div class="some-class">
+          <input
+            type="radio"
+            id="exercise_15"
+            name="exercise"
+            value="exercise_15"
+          />
+          <label for="exercise_15">15</label>
+          <input
+            type="radio"
+            id="exercise_30"
+            name="exercise"
+            value="exercise_30"
+          />
+          <label for="exercise_30">30</label>
+          <input
+            type="radio"
+            id="exercise_45"
+            name="exercise"
+            value="exercise_45"
+          />
+          <label for="exercise_45">45</label>
+          <input
+            type="radio"
+            id="exercise_60"
+            name="exercise"
+            value="exercise_60"
+          />
+          <label for="exercise_60">60</label>
+        </div>
+      </fieldset>
       <!-- Diet Rating -->
-      <label for="journalDescription" class="form-label">How Healthy Was Your Diet (Over Processed(1) - Very Healthy(5)): </label>
-      <!-- Text Area --> 
-      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <label for="journalDescription" class="form-label"
+        >How Healthy Was Your Diet (Over Processed(1) - Very Healthy(5)):
+      </label>
+      <!-- Radio Button Area -->
+      <fieldset>
+        <div class="some-class">
+          <input type="radio" id="diet_one" name="diet" value="diet_one" />
+          <label for="diet_one">1</label>
+          <input type="radio" id="diet_two" name="diet" value="diet_two" />
+          <label for="diet_two">2</label>
+          <input type="radio" id="diet_three" name="diet" value="diet_three" />
+          <label for="diet_three">3</label>
+          <input type="radio" id="diet_four" name="diet" value="diet_four" />
+          <label for="diet_four">4</label>
+          <input type="radio" id="diet_five" name="diet" value="diet_five" />
+          <label for="diet_five">5</label>
+        </div>
+      </fieldset>
       <!-- Water Rating -->
-      <label for="journalDescription" class="form-label">Water Intake (Under 8oz(1) - About 32oz(3) - 64oz(5)): </label>
-      <!-- Text Area --> 
-      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="1"></textarea>
+      <label for="journalDescription" class="form-label"
+        >Water Intake (Under 8oz(1) - About 32oz(3) - 64oz(5)):
+      </label>
+      <!-- Radio Button Area -->
+      <fieldset>
+        <div class="some-class">
+          <input type="radio" id="water_one" name="water" value="water_one" />
+          <label for="water_one">1</label>
+          <input type="radio" id="water_two" name="water" value="water_two" />
+          <label for="water_two">2</label>
+          <input
+            type="radio"
+            id="water_three"
+            name="water"
+            value="water_three"
+          />
+          <label for="water_three">3</label>
+          <input type="radio" id="water_four" name="water" value="water_four" />
+          <label for="water_four">4</label>
+          <input type="radio" id="water_five" name="water" value="water_five" />
+          <label for="water_five">5</label>
+        </div>
+      </fieldset>
       <!-- Journal -->
-      <label for="journalDescription" class="form-label">Reflect on your day and take notes of how you felt: </label>
-      <!-- Text Area --> 
-      <textarea class = "form-control" id="journalDescription" name="journalDescription" rows="3"></textarea>
-      
+      <label for="journalDescription" class="form-label"
+        >Reflect on your day and take notes of how you felt:
+      </label>
+      <!-- Text Area -->
+      <textarea
+        class="form-control"
+        id="journalDescription"
+        name="journalDescription"
+        rows="3"
+      ></textarea>
     </div>
     <!-- Submit button -->
-    <button type = "submit" class = "btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
 {% endblock %}
-    
