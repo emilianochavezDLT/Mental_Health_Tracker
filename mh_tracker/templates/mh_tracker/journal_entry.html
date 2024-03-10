@@ -2,7 +2,7 @@
     Oz Note: I believe we need models to create a typical forms page; forms.py that 
 incorporates models. -->
 
-{% extends "mh_tracker/base_template.html" %}
+{% extends "mh_tracker/base_template.html" %} {% block content %}
 
 <style>
   fieldset {
@@ -25,11 +25,10 @@ incorporates models. -->
   input.radio {
     float: left;
     clear: none;
-    margin: 2px 0 0 2px;
+    margin: 6px 0 0 2px;
   }
 </style>
 
-{% block content %}
 <div class="container">
   <h2>Journal Entry</h2>
   <!-- Introduction -->
