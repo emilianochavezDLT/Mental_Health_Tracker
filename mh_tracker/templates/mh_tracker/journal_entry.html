@@ -29,6 +29,26 @@ incorporates models. -->
   }
 </style>
 
+<script type="text/javascript">
+  function Entries() {
+    user_id = 0;
+    mood_level = document.querySelector("input[name=mood_level]:checked").value;
+    sleep_quality = document.querySelector(
+      "input[name=sleep_quality]:checked",
+    ).value;
+    exercise_time = document.querySelector(
+      "input[name=exercise_time]:checked",
+    ).value;
+    diet_quality = document.querySelector(
+      "input[name=diet_quality]:checked",
+    ).value;
+    water_intake = document.querySelector(
+      "input[name=water_intake]:checked",
+    ).value;
+    journal_text = document.getElementByID("journal_text").value;
+  }
+</script>
+
 <div class="container">
   <h2>Journal Entry</h2>
   <!-- Introduction -->
@@ -50,15 +70,15 @@ incorporates models. -->
       <!-- Radio Button Area -->
       <fieldset>
         <div class="some-class">
-          <input type="radio" id="mood_one" name="mood" value="mood_one" />
+          <input type="radio" id="mood_one" name="mood_level" value="1" />
           <label for="mood_one">1</label>
-          <input type="radio" id="mood_two" name="mood" value="mood_two" />
+          <input type="radio" id="mood_two" name="mood_level" value="2" />
           <label for="mood_two">2</label>
-          <input type="radio" id="mood_three" name="mood" value="mood_three" />
+          <input type="radio" id="mood_three" name="mood_level" value="3" />
           <label for="mood_three">3</label>
-          <input type="radio" id="mood_four" name="mood" value="mood_four" />
+          <input type="radio" id="mood_four" name="mood_level" value="4" />
           <label for="mood_four">4</label>
-          <input type="radio" id="mood_five" name="mood" value="mood_five" />
+          <input type="radio" id="mood_five" name="mood_level" value="5" />
           <label for="mood_five">5</label>
         </div>
       </fieldset>
@@ -69,41 +89,16 @@ incorporates models. -->
       <!-- Radio Button Area -->
       <fieldset>
         <div class="some-class">
-          <input
-            type="radio"
-            id="energy_one"
-            name="energy"
-            value="energy_one"
-          />
-          <label for="energy_one">1</label>
-          <input
-            type="radio"
-            id="energy_two"
-            name="energy"
-            value="energy_two"
-          />
-          <label for="energy_two">2</label>
-          <input
-            type="radio"
-            id="energy_three"
-            name="energy"
-            value="energy_three"
-          />
-          <label for="energy_three">3</label>
-          <input
-            type="radio"
-            id="energy_four"
-            name="energy"
-            value="energy_four"
-          />
-          <label for="energy_four">4</label>
-          <input
-            type="radio"
-            id="energy_five"
-            name="energy"
-            value="energy_five"
-          />
-          <label for="energy_five">5</label>
+          <input type="radio" id="sleep_one" name="sleep_quality" value="1" />
+          <label for="sleep_one">1</label>
+          <input type="radio" id="sleep_two" name="sleep_quality" value="2" />
+          <label for="sleep_two">2</label>
+          <input type="radio" id="sleep_three" name="sleep_quality" value="3" />
+          <label for="sleep_three">3</label>
+          <input type="radio" id="sleep_four" name="sleep_quality" value="4" />
+          <label for="sleep_four">4</label>
+          <input type="radio" id="sleep_five" name="sleep_quality" value="5" />
+          <label for="sleep_five">5</label>
         </div>
       </fieldset>
       <!-- Exercise Rating -->
@@ -116,29 +111,29 @@ incorporates models. -->
           <input
             type="radio"
             id="exercise_15"
-            name="exercise"
-            value="exercise_15"
+            name="exercise_time"
+            value="15"
           />
           <label for="exercise_15">15</label>
           <input
             type="radio"
             id="exercise_30"
-            name="exercise"
-            value="exercise_30"
+            name="exercise_time"
+            value="30"
           />
           <label for="exercise_30">30</label>
           <input
             type="radio"
             id="exercise_45"
-            name="exercise"
-            value="exercise_45"
+            name="exercise_time"
+            value="45"
           />
           <label for="exercise_45">45</label>
           <input
             type="radio"
             id="exercise_60"
-            name="exercise"
-            value="exercise_60"
+            name="exercise_time"
+            value="60"
           />
           <label for="exercise_60">60</label>
         </div>
@@ -150,15 +145,15 @@ incorporates models. -->
       <!-- Radio Button Area -->
       <fieldset>
         <div class="some-class">
-          <input type="radio" id="diet_one" name="diet" value="diet_one" />
+          <input type="radio" id="diet_one" name="diet_quality" value="1" />
           <label for="diet_one">1</label>
-          <input type="radio" id="diet_two" name="diet" value="diet_two" />
+          <input type="radio" id="diet_two" name="diet_quality" value="2" />
           <label for="diet_two">2</label>
-          <input type="radio" id="diet_three" name="diet" value="diet_three" />
+          <input type="radio" id="diet_three" name="diet_quality" value="3" />
           <label for="diet_three">3</label>
-          <input type="radio" id="diet_four" name="diet" value="diet_four" />
+          <input type="radio" id="diet_four" name="diet_quality" value="4" />
           <label for="diet_four">4</label>
-          <input type="radio" id="diet_five" name="diet" value="diet_five" />
+          <input type="radio" id="diet_five" name="diet_quality" value="5" />
           <label for="diet_five">5</label>
         </div>
       </fieldset>
@@ -169,20 +164,15 @@ incorporates models. -->
       <!-- Radio Button Area -->
       <fieldset>
         <div class="some-class">
-          <input type="radio" id="water_one" name="water" value="water_one" />
+          <input type="radio" id="water_one" name="water_intake" value="1" />
           <label for="water_one">1</label>
-          <input type="radio" id="water_two" name="water" value="water_two" />
+          <input type="radio" id="water_two" name="water_intake" value="2" />
           <label for="water_two">2</label>
-          <input
-            type="radio"
-            id="water_three"
-            name="water"
-            value="water_three"
-          />
+          <input type="radio" id="water_three" name="water_intake" value="3" />
           <label for="water_three">3</label>
-          <input type="radio" id="water_four" name="water" value="water_four" />
+          <input type="radio" id="water_four" name="water_intake" value="4" />
           <label for="water_four">4</label>
-          <input type="radio" id="water_five" name="water" value="water_five" />
+          <input type="radio" id="water_five" name="water_intake" value="5" />
           <label for="water_five">5</label>
         </div>
       </fieldset>
@@ -193,13 +183,20 @@ incorporates models. -->
       <!-- Text Area -->
       <textarea
         class="form-control"
-        id="journalDescription"
-        name="journalDescription"
+        id="journal_text"
+        name="journal_text"
         rows="3"
       ></textarea>
     </div>
     <!-- Submit button -->
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      onclick="Entries()"
+      href="{% url 'journal_entry' %}"
+    >
+      Submit
+    </button>
   </form>
 </div>
 {% endblock %}
