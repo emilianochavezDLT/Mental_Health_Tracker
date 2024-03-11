@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
-from mh_tracker.models import JournalEntry, User
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from .models import JournalEntry
+from .forms import JournalEntryForm
 
 # Create your views here.
 def home(request):
@@ -8,6 +10,7 @@ def home(request):
 
 
 #User can long in their journal entry
+@login_required
 def journal_entry(request):
   #user = User.objects.get(pk=pk)
   if request.method == 'POST':
@@ -53,8 +56,23 @@ def login(request):
   else:
     #Render the form
     return render(request, 'mh_tracker/login.html')
+def user_login(request):
+  if request.method == 'POST':
+      username = request.POST['username']
+      password = request.POST['password']
+      user = authenticate(request, username=username, password=password)
+      if user is not None:
+          login(request, user)
+          return redirect('journal_entry')
+      else:
+          # Handle invalid login
+          return render(request, 'mh_tracker/login.html', {'error': 'Invalid credentials'})
+  return render(request, 'mh_tracker/login.html')
 
-
+def user_logout(request):
+  logout(request)
+  return redirect('login')
+  
 def signup(request):
   if request.method == 'POST':
     #Redirect to the homepage

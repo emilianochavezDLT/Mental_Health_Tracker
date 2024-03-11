@@ -17,6 +17,6 @@ class JournalEntry(models.Model):
   water_intake = models.IntegerField()  #1 to 5
   journal_text = models.TextField()  #Keep track of journal entry texts
 
-  #Return time created by user
   def __str__(self):
-    return f"Journal Entry by {self.user.username} on {self.date_created.strftime('%m/%d/%Y')}"
+          return f"Journal Entry by {self.user.username} on {self.date_created.strftime('%m/%d/%Y')}"
+  Views:
