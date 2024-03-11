@@ -88,6 +88,8 @@ incorporates models. -->
       <!-- Radio Button Area -->
       <fieldset>
         <div class="some-class">
+          <input type="radio" id="exercise_0" name="exercise_time" value="0" />
+          <label for="exercise_0">0</label>
           <input
             type="radio"
             id="exercise_15"
@@ -184,14 +186,9 @@ incorporates models. -->
 </div>
 
 <script type="text/javascript">
+  //Gathers the form and the submit button
   const form = document.getElementById("myForm");
   const submitButton = document.getElementById("submitButton");
-
-  if (submitButton == null) {
-    console.log("Submit button not found");
-  } else {
-    console.log("Submit button found");
-  }
 
   form.addEventListener("change", function () {
     const radioGroups = form.querySelectorAll('input[type="radio"]');
