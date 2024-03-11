@@ -29,26 +29,6 @@ incorporates models. -->
   }
 </style>
 
-<script type="text/javascript">
-  function Entries() {
-    user_id = 0;
-    mood_level = document.querySelector("input[name=mood_level]:checked").value;
-    sleep_quality = document.querySelector(
-      "input[name=sleep_quality]:checked",
-    ).value;
-    exercise_time = document.querySelector(
-      "input[name=exercise_time]:checked",
-    ).value;
-    diet_quality = document.querySelector(
-      "input[name=diet_quality]:checked",
-    ).value;
-    water_intake = document.querySelector(
-      "input[name=water_intake]:checked",
-    ).value;
-    journal_text = document.getElementByID("journal_text").value;
-  }
-</script>
-
 <div class="container">
   <h2>Journal Entry</h2>
   <!-- Introduction -->
@@ -60,7 +40,7 @@ incorporates models. -->
   </p>
 
   <!-- Journal Entry Form -->
-  <form method="post">
+  <form id="myForm" method="post">
     {% csrf_token %}
     <div class="mb-3">
       <!-- Mood Rating -->
@@ -189,14 +169,76 @@ incorporates models. -->
       ></textarea>
     </div>
     <!-- Submit button -->
+    <!-- onclick="Entries()" -->
     <button
       type="submit"
+      id="submitButton"
       class="btn btn-primary"
       onclick="Entries()"
       href="{% url 'journal_entry' %}"
+      disabled
     >
       Submit
     </button>
   </form>
 </div>
+
+<script type="text/javascript">
+  const form = document.getElementById("myForm");
+  const submitButton = document.getElementById("submitButton");
+
+  if (submitButton == null) {
+    console.log("Submit button not found");
+  } else {
+    console.log("Submit button found");
+  }
+
+  form.addEventListener("change", function () {
+    const radioGroups = form.querySelectorAll('input[type="radio"]');
+    let allSelected = true;
+
+    // Check each group
+    radioGroups.forEach((group) => {
+      const groupName = group.getAttribute("name");
+      const groupRadios = form.querySelectorAll(`input[name="${groupName}"]`);
+      let selected = false;
+
+      // Check if any radio in the group is selected
+      groupRadios.forEach((radio) => {
+        if (radio.checked) {
+          selected = true;
+        }
+      });
+
+      if (!selected) {
+        allSelected = false;
+      }
+    });
+
+    // Enable/disable submit button based on allSelected
+    if (allSelected) {
+      submitButton.removeAttribute("disabled");
+    } else {
+      submitButton.setAttribute("disabled", "disabled");
+    }
+  });
+
+  /*function Entries() {
+    mood_level = document.querySelector("input[name=mood_level]:checked").value;
+    sleep_quality = document.querySelector(
+      "input[name=sleep_quality]:checked",
+    ).value;
+    exercise_time = document.querySelector(
+      "input[name=exercise_time]:checked",
+    ).value;
+    diet_quality = document.querySelector(
+      "input[name=diet_quality]:checked",
+    ).value;
+    water_intake = document.querySelector(
+      "input[name=water_intake]:checked",
+    ).value;
+    journal_text = document.getElementByID("journal_text").value;
+  }*/
+</script>
+
 {% endblock %}
