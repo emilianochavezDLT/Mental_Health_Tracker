@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from mh_tracker.models import JournalEntry, User
+from mh_tracker.models import JournalEntry, User, Profile
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
-from .forms import SignupForm, LoginForm
+from .forms import SignupForm, LoginForm, UserForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import generic
 
-
-
+class UserView(LoginRequiredMixin, generic.DetailView):
+  model = User
 # Create your views here.
 def home(request):
   return render(request, 'mh_tracker/home.html')
@@ -33,7 +35,7 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)    
-                return redirect('mh_tracker/home.html')
+                return redirect('home')
     else:
         form = LoginForm()
     return render(request, 'mh_tracker/login.html', {'form': form})
@@ -96,3 +98,17 @@ def analytics(request):
   else:
     #Render the form
     return render(request, 'mh_tracker/analytics.html')
+
+def userPage(request, user_id):
+  app_user = User.objects.get(id=user_id)
+  profile = Profile.objects.get(user=app_user)
+  form = UserForm()
+  if request.method == 'POST':
+          user_data = request.POST.copy()
+          form = UserForm(user_data)
+          if form.is_valid():
+              appuser = form.save(commit=False)
+              appuser.user = app_user
+              return redirect('user_detail')
+  context = {'form': form, 'app_user':app_user, 'profile':profile}
+  return render(request, 'mh_tracker/user_form.html', context)
