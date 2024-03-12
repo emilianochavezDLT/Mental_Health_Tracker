@@ -33,7 +33,7 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)    
-                return redirect('mh_tracker/home.html')
+                return redirect('home')
     else:
         form = LoginForm()
     return render(request, 'mh_tracker/login.html', {'form': form})
@@ -90,7 +90,7 @@ def settings(request):
     #Render the form
     return render(request, 'mh_tracker/settings.html')
 
-
+@login_required
 def analytics(request):
   if request.method == 'POST':
     #Redirect to the homepage
