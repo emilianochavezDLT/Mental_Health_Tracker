@@ -42,9 +42,11 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('home')
+
+
   
 #User can long in their journal entry
-
+@login_required
 def journal_entry(request):
         if request.method == 'POST':
             journal_Entry = JournalEntry(
