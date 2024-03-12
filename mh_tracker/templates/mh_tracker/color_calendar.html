@@ -1,0 +1,70 @@
+{% extends "mh_tracker/base_template.html" %}
+
+{% block content %}
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          display: 'background',
+          eventDidMount: function(info) {
+            var date = info.event.startStr.split("T")[0];
+            var moodColor = getMoodColor(date); 
+            info.el.style.backgroundColor = moodColor;
+          }
+        });
+        calendar.render();
+        $.ajax({
+          url: "{% url 'get_journal_entries' %}",
+          dataType: 'json',
+          success: function(data) {
+            for (var date in data) {
+              var moodColor = getMoodColor(date);
+              var cell = calendarEl.querySelector('[data-date="' + date + '"]');
+              if (cell) {
+                cell.style.backgroundColor = moodColor;
+              }
+            }
+          }
+        });
+      });
+
+      function getMoodColor(date) {
+          var moodColor = '#ffffff';  // Default color
+
+          // Check if mood data is available for the date
+          if (data.hasOwnProperty(date)) {
+              var mood_level = data[date].mood_level;
+
+              // Define mood colors
+              var moodColors = {
+                  1: '#ff0000', // Red
+                  2: '#ff6600', // Orange
+                  3: '#ffff00', // Yellow
+                  4: '#99ff00', // Green
+                  5: '#00ff00'  // Dark green
+              };
+
+              // Get the corresponding color based on mood level
+              moodColor = moodColors[mood_level];
+          }
+
+          return moodColor;
+      }
+
+
+    </script>
+  </head>
+  <body>
+    <div id='calendar'></div>
+  </body>
+</html>
+<!-- calendar.getOption('locale'); 
+use the above for dynamic changing-->
+{% endblock %}
