@@ -6,6 +6,7 @@
     <!-- Display settings for logged-in user -->
     <h1>Welcome, {{ user.username }}</h1>
     <!-- Add your settings options here for logged-in users -->
+  <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
   {% else %}
     <h1>Login or Sign Up</h1>
     <form action="{% url 'login' %}" method="post">

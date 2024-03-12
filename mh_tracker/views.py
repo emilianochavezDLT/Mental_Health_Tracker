@@ -41,7 +41,7 @@ def user_login(request):
 # logout page
 def user_logout(request):
     logout(request)
-    return redirect('mh_tracker/login.html')
+    return redirect('home')
   
 #User can long in their journal entry
 
