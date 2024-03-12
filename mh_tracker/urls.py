@@ -11,7 +11,8 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'), 
     path('signup/', views.user_signup, name='signup'), 
     path('analytics/', views.analytics, name='analytics'), 
-  path('get_journal_entries/', views.get_journal_entries, name='get_journal_entries'),
+    path('get_journal_entries/', views.get_journal_entries, name='get_journal_entries'),
+  path('user/<int:pk>', views.UserView.as_view(), name="user_detail"),
   
   
 ]
