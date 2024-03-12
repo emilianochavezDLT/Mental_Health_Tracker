@@ -10,10 +10,12 @@
   document.addEventListener('DOMContentLoaded', function() {
     // Access URL from data attribute
     const progressionUrl = document.getElementById('progressionUrl').getAttribute('data-url');
+    //Fetch data from the server
     fetch(progressionUrl)
       .then(response => response.json())
       .then(data => {
         const ctx = document.getElementById('progressionChart').getContext('2d');
+        //Create a new chart instance to draw progression chart
         const progressionChart = new Chart(ctx, {
           type: 'line',
           data: {
@@ -41,6 +43,7 @@
         });
       })
       .catch(error => {
+        //Handles errors if fetch does not grab data 
         console.error('Error fetching progression data:', error);
       });
   });
