@@ -15,4 +15,5 @@ urlpatterns = [
     path('get_journal_entries/',
          views.get_journal_entries,
          name='get_journal_entries'),
+    path('resources/', views.rescourcesPage, name='resources'),
 ]
