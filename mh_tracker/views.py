@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from mh_tracker.models import JournalEntry, User
 from django.contrib.auth import authenticate, login, logout 
 from django.contrib.auth.decorators import login_required
@@ -17,7 +18,7 @@ def user_signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('mh_tracker/login.html')
+            return redirect('home')
     else:
         form = SignupForm()
     return render(request, 'mh_tracker/signup.html', {'form': form})
@@ -56,10 +57,19 @@ def journal_entry(request):
                 journal_text=request.POST['journal_text']
             )
             journal_Entry.save()
-            return redirect('mh_tracker/home.html')
+            return redirect('home')
         else:
             return render(request, 'mh_tracker/journal_entry.html')
 
+def get_journal_entries(request):
+  # Define fake mood data for specific dates
+  mood_data = {
+      "2024-03-01": {"mood_level": 3},
+      "2024-03-05": {"mood_level": 5},
+      # Add more entries as needed
+  }
+
+  return JsonResponse(mood_data)
 
 def color_calendar(request):
   if request.method == 'POST':
@@ -67,7 +77,7 @@ def color_calendar(request):
     return redirect('mh_tracker/home.html')
   else:
     #Render the form
-    return render(request, 'mh_tracker/color_calender.html')
+    return render(request, 'mh_tracker/color_calendar.html')
 
 
 def settings(request):
