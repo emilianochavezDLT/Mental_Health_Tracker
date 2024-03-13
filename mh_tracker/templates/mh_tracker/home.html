@@ -1,60 +1,68 @@
-  {% extends "mh_tracker/base_template.html" %}
+{% extends "mh_tracker/base_template.html" %}
 
-  {% block content %}
-  <div class="container-fluid">
-    
-          <meta name ="viewport" content ="width=30vmax, initial-scale=1">
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-          <script src ="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-          <script src ="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-          </head>
-            <!-- Main content -->
-                <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                  <!-- App Description -->
-                    <div class = "app-description">
-                      <h2>Welcome to Spectum Diary</h2>
-                      <p>MHA is designed to help you track your mood, thoughts, and emotions. We encourage you to reflect on your day. Here, you can journal your thoughts, monitor your mood and gain insights into your well-being over time. Get started by logging your first entry today!</p>
-                  </div>
-                  <!-- Your content here -->
-                  <div class="row 1">
-                    <div class="col-sm-6">
-                      <div id="card_bg" class="card text-center">
-                        <a class="card-body stretched-link text-decoration-none" href="{% url 'journal_entry' %}">
-                          <h5 class="card-title text-warning">Todays Journal</h5>
-                          <p class="card-text text-warning">With supporting text below as a natural lead-in to additional content.</p>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div id="card_bg" class="card text-center">
-                        <a class="card-body stretched-link text-decoration-none" href="{% url 'color_calendar' %}">
-                          <h5 class="card-title-center text-warning">Calendar</h5>
-                          <p class="card-text text-warning">View Past Journal Entries And Monthly Overview.</p>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+{% block content %}
+<div class="container-fluid">
+    <meta name="viewport" content="width=30vmax, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- Main content -->
+    <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <!-- App Description -->
+        <div class="app-description">
+            <h2>Welcome to Spectum Diary</h2>
+            <p>MHA is designed to help you track your mood, thoughts, and emotions. We encourage you to reflect on your day. Here, you can journal your thoughts, monitor your mood and gain insights into your well-being over time. Get started by logging your first entry today!</p>
+        </div>
 
-                  <div class="row 2 mt-4">
-                    <div class="col-sm-6">
-                      <div id="card_bg" class="card text-center">
-                        <a class="card-body stretched-link text-decoration-none" href="{% url 'analytics' %}">
-                          <h5 class="card-title-center text-warning">Analytics</h5>
-                          <p class="card-text text-warning">View, Share, and Export Reports and Graphs Overtime.</p>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="col-sm-6">
-                      <div id="card_bg" class="card text-center">
-                        <a class="card-body stretched-link text-decoration-none" href="{% url 'login' %}">
-                          <h5 class="card-title text-warning"">Login</h5>
-                          <p class="card-text text-warning">To View Your Personal Data Login or Signup.</p>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="container pt-4">
-                </main>
-              </div>
+        <div class="row 1">
+            <div class="col-sm-6 mb-4">
+                <div id="card_bg" class="card text-center">
+                    <a class="card-body stretched-link text-decoration-none" href="{% url 'journal_entry' %}">
+                        <h5 class="card-title text-warning">Todays Journal</h5>
+                        <p class="card-text text-warning">With supporting text below as a natural lead-in to additional content.</p>
+                    </a>
+                </div>
             </div>
-            {% endblock %}
+
+            <div class="col-sm-6 mb-4">
+                <div id="card_bg" class="card text-center">
+                    <a class="card-body stretched-link text-decoration-none" href="{% url 'color_calendar' %}">
+                        <h5 class="card-title-center text-warning">Calendar</h5>
+                        <p class="card-text text-warning">View Past Journal Entries And Monthly Overview.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row 2 mt-4">
+            <div class="col-sm-6 mb-4">
+                <div id="card_bg" class="card text-center">
+                    <a class="card-body stretched-link text-decoration-none" href="{% url 'analytics' %}">
+                        <h5 class="card-title-center text-warning">Analytics</h5>
+                        <p class="card-text text-warning">View, Share, and Export Reports and Graphs Overtime.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-6 mb-4">
+                <div id="card_bg" class="card text-center">
+                    <a class="card-body stretched-link text-decoration-none" href="{% url 'login' %}">
+                        <h5 class="card-title text-warning">Login</h5>
+                        <p class="card-text text-warning">To View Your Personal Data Login or Signup.</p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-sm-6 mb-4">
+                <div id="card_bg" class="card text-center">
+                    <a class="card-body stretched-link text-decoration-none" href="{% url 'substance_abuse_chart' %}">
+                        <h5 class="card-title text-warning">Substance Abuse Chart</h5>
+                        <p class="card-text text-warning">To View Your Substance Abuse Chart.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container pt-4">
+    </main>
+</div>
+{% endblock %}
