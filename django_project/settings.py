@@ -110,9 +110,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#Currently only prints to console
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.mail.yahoo.com'
-EMAIL_HOST_USER = 'joe.braitsch3@yahoo.com'
-EMAIL_HOST_PASSWORD = '3edcxXZSE$'
-EMAIL_PORT = 465
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 465  #For SSL??
+#EMAIL_PORT = 587 #For TSL??
 EMAIL_USE_SSL = True
+Email_USE_TSL = False
