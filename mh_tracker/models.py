@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Create your models here.
-
 class JournalEntry(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   date_created = models.DateTimeField(auto_now_add=True)
@@ -15,7 +13,17 @@ class JournalEntry(models.Model):
   journal_text = models.TextField()
 
   def __str__(self):
-      return f"Journal Entry by {self.user.username} on {self.date_created.strftime('%m/%d/%Y')}"
+    return f"Journal Entry by {self.user.username} on {self.date_created.strftime('%m/%d/%Y')}"
+
+
+class SubstanceAbuseTracking(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  date = models.DateField(auto_now_add=True)
+  days_sober = models.IntegerField(default=0)
+  counter = models.IntegerField(default=0)
+
+  def __str__(self):
+    return f"Soberiety record for {self.user.username} on {self.date}"
 
 '''
 #User Journal settings
