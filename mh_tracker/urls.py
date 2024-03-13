@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
+from .views import update_substance_use
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -17,4 +18,10 @@ urlpatterns = [
     path('substance_abuse_chart/',
          views.substance_abuse_chart,
          name='substance_abuse_chart'),
+    path('substance_use/increment/',
+         lambda request: update_substance_use(request, 'increment'),
+         name='increment_substance_use'),
+    path('substance_use/reset/',
+         lambda request: update_substance_use(request, 'reset'),
+         name='reset_substance_use'),
 ]

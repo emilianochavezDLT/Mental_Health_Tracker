@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from mh_tracker.models import JournalEntry, User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SignupForm, LoginForm
 from .models import SubstanceAbuseTracking
+from django.urls import reverse
+from django.utils.timezone import now
 
 
 # Create your views here.
@@ -111,35 +113,36 @@ def substance_abuse_chart(request):
   substance_data = SubstanceAbuseTracking.objects.filter(
       user=user).order_by('date')
 
+  dates = [entry.date.strftime('%Y-%m-%d') for entry in substance_data]
+  counters = [entry.counter for entry in substance_data]
+
   context = {
       'substance_data': substance_data,
+      'dates': dates,
+      'counters': counters,
   }
 
   return render(request, 'mh_tracker/substance_abuse_chart.html', context)
 
 
-def increment_substance_counter(request):
-  user = request.user
-  substance_data = SubstanceAbuseTracking.objects.filter(user=user).first()
-  if substance_data:
-    substance_data.counter += 1
-    substance_data.save()
+@login_required
+def update_substance_use(request, action):
+  if request.method == 'POST':
+    today = now().date()
+    entry, created = SubstanceAbuseTracking.objects.get_or_create(
+        user=request.user,
+        date=today,
+        defaults={
+            'days_sober': 0,
+            'counter': 0
+        }  # defaults are used if a new entry is created
+    )
+    if action == 'increment':
+      entry.counter += 1
+      entry.save()
+    elif action == 'reset':
+      entry.counter = 0
+      entry.save()
+    return HttpResponseRedirect(reverse('substance_abuse_chart'))
   else:
-    substance_data = SubstanceAbuseTracking(user=user, counter=1)
-    substance_data.save()
-  # Update the chart data after incrementing the counter
-  # You may need to update the chart data in your frontend accordingly
-  return JsonResponse(
-      {'message': 'Substance counter incremented successfully'})
-
-
-def reset_substance_counter(request):
-  user = request.user
-  substance_data = SubstanceAbuseTracking.objects.filter(user=user).first()
-  if substance_data:
-    substance_data.counter = 0
-    substance_data.save()
-    # You may need to update the chart data in your frontend accordingly
-    return JsonResponse({'message': 'Substance counter reset successfully'})
-  else:
-    return JsonResponse({'error': 'No substance data found for the user'})
+    return HttpResponseRedirect(reverse('home'))
