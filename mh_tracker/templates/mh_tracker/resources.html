@@ -3,19 +3,17 @@
 <h1 class="display-5 text-center">National Crisis Resources</h1>
 
 <ul class="list-group list-group-flush">
-  </ul>
   <li class="list-group-item">
     National Suicide Prevention Lifeline <br /><b>800-273-8255</b>
   </li>
-  <li class="list-group-item">National Hopeline Network <br /><b>800-784-2433</b></li>
+  <li class="list-group-item">
+    National Hopeline Network <br /><b>800-784-2433</b>
+  </li>
   <li class="list-group-item">
     National Youth Crisis Hotline <br /><b>800-422-4673</b>
   </li>
-  <li class="list-group-item">
-    Poison Control<br /><b>800-222-1222</b>
-  </li>
-  
-  </ul>
+  <li class="list-group-item">Poison Control<br /><b>800-222-1222</b></li>
+
   <h1 class="display-5 text-center">Substance Abuse Related Resources</h1>
   <li class="list-group-item">Alcohol Hotline <br /><b>800-331-2900</b></li>
   <li class="list-group-item">
@@ -31,11 +29,10 @@
     <a href="https://na.org/"><b>Narcotics Anonymous</b> </a>
   </li>
   <li class="list-group-item">
-    <a href="https://www.gamblersanonymous.org/ga/"><b>Gamblers Anonymous</b> </a>
+    <a href="https://www.gamblersanonymous.org/ga/"
+      ><b>Gamblers Anonymous</b>
+    </a>
   </li>
-
-
-
 
   <h1 class="display-5 text-center">Domestic Violence Resources</h1>
   <li class="list-group-item">
@@ -44,14 +41,100 @@
   <li class="list-group-item">
     National U.S. Child Abuse Hotline <br /><b>800-422-4453</b>
   </li>
-</ul>
+
   <h1 class="display-5 text-center">LGBTQ+ Resources</h1>
   <li class="list-group-item">
     LGBT National Hotline<br /><b>888-843-4564</b>
   </li>
   <li class="list-group-item">
-    Trevor Lifeline (for LGBTQ+ teens and young adults) <br /><b>866-488-7386</b> or text <b>678678</b>
+    Trevor Lifeline (for LGBTQ+ teens and young adults) <br /><b
+      >866-488-7386</b
+    >
+    or text <b>678678</b>
   </li>
 </ul>
 
-{% endblock %}
+<h1 class="display-5 text-center">Extra Content</h1>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="row">
+      <!-- Hardcoded Article Card -->
+      <div class="col-12 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Sample Article Title</h5>
+            <p class="card-text">This is a hardcoded description.</p>
+            <a href="#" class="btn btn-primary" target="_blank">View PDF</a>
+          </div>
+        </div>
+      </div>
+      {% for article in articles %}
+      <div class="col-12 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ article.title }}</h5>
+            <p class="card-text">{{ article.description|truncatewords:20 }}</p>
+            {% if article.pdf %}
+            <a
+              href="{{ article.pdf.url }}"
+              class="btn btn-primary"
+              target="_blank"
+              >View PDF</a
+            >
+            {% else %}
+            <p class="card-text">No PDF available.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="row">
+      <div class="row">
+        <!-- Hardcoded Video Card -->
+        <div class="col-12 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Sample Video Title</h5>
+              <!-- Example of a hardcoded embedded YouTube video -->
+              <iframe
+                class="embed-responsive-item"
+                style="width: 100%; height: 200px"
+                src="https://www.youtube.com/watch?v=ptKDIAXYoE8"
+                frameborder="0"
+                allowfullscreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+        {% for video in videos %}
+        <div class="col-12 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ video.title }}</h5>
+              {% if video.is_youtube_video %}
+              <iframe
+                class="embed-responsive-item"
+                style="width: 100%; height: 200px"
+                src="{{ video.youtube_link }}"
+                frameborder="0"
+                allowfullscreen
+              ></iframe>
+              {% elif video.is_uploaded_video %}
+              <video style="width: 100%; height: 200px" controls>
+                <source src="{{ video.video_file.url }}" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% endblock %}
+  </div>
+</div>

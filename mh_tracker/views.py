@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from mh_tracker.models import JournalEntry, User, Profile
+from mh_tracker.models import JournalEntry, User, Profile, Article, Videos
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SignupForm, LoginForm, UserForm
@@ -127,4 +127,10 @@ def userPage(request, user_id):
 
 
 def rescourcesPage(request):
-  return render(request, 'mh_tracker/resources.html')
+  videos = Videos.objects.all()
+  articles = Article.objects.all()
+  context = {
+    'videos': videos,
+    'articles': articles
+  }
+  return render(request, 'mh_tracker/resources.html', context)
