@@ -1,0 +1,20 @@
+{% extends "mh_tracker/base_template.html" %} {% block content %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Substance Abuse Tracking Chart</title>
+  </head>
+  <body>
+    <h1>Substance Abuse Tracking Chart</h1>
+    <div>
+      {% if substance_data %}
+      <p>Days Sober: {{ substance_data.days_sober }}</p>
+      {%else%}
+      <p>No data available</p>
+      {% endif %}
+    </div>
+    <button onclick="incrementCounter()">Increment Counter</button>
+    <button onclick="resetCounter()">Reset Counter</button>
+  </body>
+</html>
+{% endblock %}
