@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import SignupForm, LoginForm
 from .models import SubstanceAbuseTracking
 import random
+from django.contrib.auth.models import AnonymousUser
 
 
 # Create your views here.
@@ -108,9 +109,8 @@ def analytics(request):
 
 
 def substance_abuse_chart(request):
-  # get data for logged-in user
-  substance_data = SubstanceAbuseTracking.objects.filter(
-      user=request.user).first()
+  user = request.user if not isinstance(request.user, AnonymousUser) else None
+  substance_data = SubstanceAbuseTracking.objects.filter(user=user).first()
 
   context = {
       'substance_data': substance_data,
