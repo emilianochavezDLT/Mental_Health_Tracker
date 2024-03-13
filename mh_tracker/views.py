@@ -106,3 +106,32 @@ def analytics(request):
   else:
     #Render the form
     return render(request, 'mh_tracker/analytics.html')
+
+
+@login_required
+# View user progression
+def user_progression(request):
+  '''
+  Gathers journal entry ratings and dates to display progression
+  Convert data into JSON for Chart.js visulization 
+  '''
+  journal_entries = JournalEntry.objects.filter(user=request.user).order_by('-date_created')
+  dates = [entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries]
+  moods = [entry.mood_level for entry in journal_entries]
+  return JsonResponse(data={'dates': dates, 'moods': moods})
+
+'''
+def userPage(request, user_id):
+  app_user = User.objects.get(id=user_id)
+  profile = Profile.objects.get(user=app_user)
+  form = UserForm()
+  if request.method == 'POST':
+          user_data = request.POST.copy()
+          form = UserForm(user_data)
+          if form.is_valid():
+              appuser = form.save(commit=False)
+              appuser.user = app_user
+              return redirect('user_detail')
+  context = {'form': form, 'app_user':app_user, 'profile':profile}
+  return render(request, 'mh_tracker/user_form.html', context)
+'''
