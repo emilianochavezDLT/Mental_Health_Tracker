@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from mh_tracker.models import JournalEntry, User, Profile, Article, Videos
+from mh_tracker.models import JournalEntry, User, Article, Videos
 from django.http import JsonResponse, HttpResponseRedirect
 from mh_tracker.models import JournalEntry, User
 from django.contrib.auth import authenticate, login, logout
@@ -14,10 +14,9 @@ from django_project.settings import EMAIL_HOST_USER
 import requests
 
 
-
 # Create your views here.
 def home(request):
-  quotes=[]
+  quotes = []
   for i in range(2):
     r = requests.get('https://zenquotes.io/api/random')
     quotes.append(r.json()[0]['h'])
@@ -26,20 +25,25 @@ def home(request):
 
 # signup page
 def user_signup(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            subject = 'Welcome to Spectrum Diary: Mental Health Tracker'
-            message = f'Hi {username}! We are glad to see you taking steps to improve your mental health.'
-            recipiant_email = [form.cleaned_data['email']]
-            from_email = EMAIL_HOST_USER
-            send_mail(subject, message, from_email, recipiant_email, fail_silently=False)
-            form.save()
-            return redirect('home')
-    else:
-        form = SignupForm()
-    return render(request, 'mh_tracker/signup.html', {'form': form})
+  if request.method == 'POST':
+    form = SignupForm(request.POST)
+    if form.is_valid():
+      username = form.cleaned_data['username']
+      subject = 'Welcome to Spectrum Diary: Mental Health Tracker'
+      message = f'Hi {username}! We are glad to see you taking steps to improve your mental health.'
+      recipiant_email = [form.cleaned_data['email']]
+      from_email = EMAIL_HOST_USER
+      send_mail(subject,
+                message,
+                from_email,
+                recipiant_email,
+                fail_silently=False)
+      form.save()
+      return redirect('home')
+  else:
+    form = SignupForm()
+  return render(request, 'mh_tracker/signup.html', {'form': form})
+
 
 # login page
 def user_login(request):
@@ -161,6 +165,8 @@ def update_substance_use(request, action):
     return HttpResponseRedirect(reverse('substance_abuse_chart'))
   else:
     return HttpResponseRedirect(reverse('home'))
+
+
 @login_required
 # View user progression
 def user_progression(request):
@@ -168,10 +174,14 @@ def user_progression(request):
   Gathers journal entry ratings and dates to display progression
   Convert data into JSON for Chart.js visulization 
   '''
-  journal_entries = JournalEntry.objects.filter(user=request.user).order_by('-date_created')
-  dates = [entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries]
+  journal_entries = JournalEntry.objects.filter(
+      user=request.user).order_by('-date_created')
+  dates = [
+      entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries
+  ]
   moods = [entry.mood_level for entry in journal_entries]
   return JsonResponse(data={'dates': dates, 'moods': moods})
+
 
 '''
 def userPage(request, user_id):
@@ -188,11 +198,10 @@ def userPage(request, user_id):
   context = {'form': form, 'app_user': app_user, 'profile': profile}
   return render(request, 'mh_tracker/user_form.html', context)
 '''
+
+
 def rescourcesPage(request):
   videos = Videos.objects.all()
   articles = Article.objects.all()
-  context = {
-    'videos': videos,
-    'articles': articles
-  }
+  context = {'videos': videos, 'articles': articles}
   return render(request, 'mh_tracker/resources.html', context)
