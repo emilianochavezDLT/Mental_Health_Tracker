@@ -109,3 +109,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.yahoo.com'
+EMAIL_HOST_USER = 'joe.braitsch3@yahoo.com'
+EMAIL_HOST_PASSWORD = '3edcxXZSE$'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
