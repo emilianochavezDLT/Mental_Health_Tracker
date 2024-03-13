@@ -176,11 +176,17 @@ def user_progression(request):
   '''
   journal_entries = JournalEntry.objects.filter(
       user=request.user).order_by('-date_created')
-  dates = [
-      entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries
-  ]
-  moods = [entry.mood_level for entry in journal_entries]
-  return JsonResponse(data={'dates': dates, 'moods': moods})
+  #List all model data to be passed
+  data = {
+      'data':[entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries],
+      'mood_levels': [entry.mood_level for entry in journal_entries],
+      'sleep_quality': [entry.sleep_quality for entry in journal_entries],
+      'exercise_time': [entry.exercise_time for entry in journal_entries],
+      'diet_quality': [entry.diet_quality for entry in journal_entries],
+      'water_intake': [entry.water_intake for entry in journal_entries],
+    
+}
+  return JsonResponse(data)
 
 
 '''

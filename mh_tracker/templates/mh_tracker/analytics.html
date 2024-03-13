@@ -7,45 +7,69 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Access URL from data attribute
+document.addEventListener('DOMContentLoaded', function() {
+   // Access URL from data attribute
     const progressionUrl = document.getElementById('progressionUrl').getAttribute('data-url');
-    //Fetch data from the server
+  //Fetch data from the server
     fetch(progressionUrl)
-      .then(response => response.json())
-      .then(data => {
-        const ctx = document.getElementById('progressionChart').getContext('2d');
-        //Create a new chart instance to draw progression chart
-        const progressionChart = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: data.dates,
-            datasets: [{
-              label: 'Progression Levels',
-              data: data.moods,
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 1
-            }]
-          },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  stepSize: 1,
-                  max: 5, 
-                  min: 1 
+        .then(response => response.json())
+        .then(data => {
+          // Log data
+          console.log(data);
+            const ctx = document.getElementById('progressionChart').getContext('2d');
+           //Create a new chart instance to draw progression chart
+            const progressionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.dates, 
+                    datasets: [
+                        {
+                            label: 'Mood Level',
+                            data: data.mood_levels,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            fill: false,
+                        },
+                        {
+                            label: 'Sleep Quality',
+                            data: data.sleep_quality,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            fill: false,
+                        },
+                        {
+                            label: 'Exercise Time',
+                            data: data.exercise_time,
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            fill: false,
+                        },
+                        {
+                            label: 'Diet Quality',
+                            data: data.diet_quality,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            fill: false,
+                        },
+                        {
+                            label: 'Water Intake',
+                            data: data.water_intake,
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            fill: false,
+                        }
+                      
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                          
+                        }
+                    }
                 }
-              }
-            }
-          }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching progression data:', error);
         });
-      })
-      .catch(error => {
-        //Handles errors if fetch does not grab data 
-        console.error('Error fetching progression data:', error);
-      });
-  });
+});
 </script>
+
 {% endblock %}
