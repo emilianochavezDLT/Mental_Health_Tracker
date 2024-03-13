@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from mh_tracker.models import JournalEntry, User, Profile, Article, Videos
 from django.http import JsonResponse, HttpResponseRedirect
 from mh_tracker.models import JournalEntry, User
 from django.contrib.auth import authenticate, login, logout
@@ -177,12 +179,20 @@ def userPage(request, user_id):
   profile = Profile.objects.get(user=app_user)
   form = UserForm()
   if request.method == 'POST':
-          user_data = request.POST.copy()
-          form = UserForm(user_data)
-          if form.is_valid():
-              appuser = form.save(commit=False)
-              appuser.user = app_user
-              return redirect('user_detail')
-  context = {'form': form, 'app_user':app_user, 'profile':profile}
+    user_data = request.POST.copy()
+    form = UserForm(user_data)
+    if form.is_valid():
+      appuser = form.save(commit=False)
+      appuser.user = app_user
+      return redirect('user_detail')
+  context = {'form': form, 'app_user': app_user, 'profile': profile}
   return render(request, 'mh_tracker/user_form.html', context)
 '''
+def rescourcesPage(request):
+  videos = Videos.objects.all()
+  articles = Article.objects.all()
+  context = {
+    'videos': videos,
+    'articles': articles
+  }
+  return render(request, 'mh_tracker/resources.html', context)
