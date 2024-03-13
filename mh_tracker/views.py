@@ -9,12 +9,17 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from django_project.settings import EMAIL_HOST_USER
+import requests
 
 
 
 # Create your views here.
 def home(request):
-  return render(request, 'mh_tracker/home.html')
+  quotes=[]
+  for i in range(2):
+    r = requests.get('https://zenquotes.io/api/random')
+    quotes.append(r.json()[0]['h'])
+  return render(request, 'mh_tracker/home.html', {'quotes': quotes})
 
 
 # signup page

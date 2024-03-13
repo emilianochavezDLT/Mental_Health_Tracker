@@ -1,6 +1,41 @@
 {% extends "mh_tracker/base_template.html" %}
 
 {% block content %}
+<style>
+  #card_bg{
+    background-color: indigo;
+    opacity: 0.5;
+  }
+  <!-- From https://www.w3schools.com/ -->
+  .card{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+    transition: 0.3s;
+    width: 60%;
+  }
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.6);
+  }
+  .nav_br{
+    width:300vmax;
+  }
+  .nav-column { 
+    color: white; 
+  }
+  .nav-link {
+    background-color: white;     
+    border: none; 
+    padding: 20px 20px; 
+    margin-bottom: 5px; 
+    margin-top: 5px; 
+    display: block; 
+    text-align: left; 
+    text-decoration: none; 
+    border-radius: 5px;
+  }
+  .nav-link:hover {
+    background-color: #eee; 
+  }
+</style>
 <div class="container-fluid">
     <meta name="viewport" content="width=30vmax, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -60,48 +95,43 @@
                     </a>
                 </div>
             </div>
+          <div class="col-sm-6 mb-4">
+              <div id="card_bg" class="card text-center">
+                  <a class="card-body stretched-link text-decoration-none" href="{% url 'settings' %}">
+                      <h5 class="card-title text-warning">Settings</h5>
+                      <p class="card-text text-warning">View Account and Profile Settings.</p>
+                  </a>
+              </div>
+          </div>
         </div>
 
         <div class="container pt-4">
     </main>
 </div>
+<div id="demo" class="carousel slide" data-ride="carousel">
+
+  <!-- Indicators -->
+  <ul class="carousel-indicators">
+    <li data-target="#demo" data-slide-to="0" class="active"></li>
+    <li data-target="#demo" data-slide-to="1"></li>
+    <li data-target="#demo" data-slide-to="2"></li>
+  </ul>
+
+  <!-- The slideshow -->
+  <div class="carousel-inner">
+    {% for quote in quotes %}
+    <div class="carousel-item active">
+      {{quote}}
+    </div>
+    <div class="carousel-item">
+      <p>{{quote}}</p>
+    </div>
+    {% endfor %}}
+  </div>
+
+<p>Quotes provided by: <a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a></p>
 {% endblock %}
 
-
 </body>
-  <style>
-    #card_bg{
-      background-color: indigo;
-      opacity: 0.5;
-    }
-    <!-- From https://www.w3schools.com/ -->
-    .card{
-      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
-      transition: 0.3s;
-      width: 60%;
-    }
-    .card:hover {
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.6);
-    }
-    .nav_br{
-      width:300vmax;
-    }
-    .nav-column { 
-      color: white; 
-    }
-    .nav-link {
-      background-color: white;     
-      border: none; 
-      padding: 20px 20px; 
-      margin-bottom: 5px; 
-      margin-top: 5px; 
-      display: block; 
-      text-align: left; 
-      text-decoration: none; 
-      border-radius: 5px;
-    }
-    .nav-link:hover {
-      background-color: #eee; 
-    }
-  </style>
+  
 </html>
