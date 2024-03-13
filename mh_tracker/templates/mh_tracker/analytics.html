@@ -1,5 +1,51 @@
 {% extends "mh_tracker/base_template.html" %}
 
 {% block content %}
-<h2>Analytics</h2>
+<canvas id="progressionChart"></canvas>
+<!-- Store URL in a hidden div element -->
+<div id="progressionUrl" data-url="{% url 'user_progression' %}" style="display: none;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Access URL from data attribute
+    const progressionUrl = document.getElementById('progressionUrl').getAttribute('data-url');
+    //Fetch data from the server
+    fetch(progressionUrl)
+      .then(response => response.json())
+      .then(data => {
+        const ctx = document.getElementById('progressionChart').getContext('2d');
+        //Create a new chart instance to draw progression chart
+        const progressionChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.dates,
+            datasets: [{
+              label: 'Progression Levels',
+              data: data.moods,
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 1,
+                  max: 5, 
+                  min: 1 
+                }
+              }
+            }
+          }
+        });
+      })
+      .catch(error => {
+        //Handles errors if fetch does not grab data 
+        console.error('Error fetching progression data:', error);
+      });
+  });
+</script>
 {% endblock %}

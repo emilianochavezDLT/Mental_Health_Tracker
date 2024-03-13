@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from mh_tracker.models import JournalEntry, User, Profile, Article, Videos
+from django.http import JsonResponse, HttpResponseRedirect
+from mh_tracker.models import JournalEntry, User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignupForm, LoginForm, UserForm
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import generic
+from .forms import SignupForm, LoginForm
+from .models import SubstanceAbuseTracking
+from django.urls import reverse
+from django.utils.timezone import now
+from django.core.mail import send_mail
+from django_project.settings import EMAIL_HOST_USER
 
-
-class UserView(LoginRequiredMixin, generic.DetailView):
-  model = User
 
 
 # Create your views here.
@@ -19,15 +21,20 @@ def home(request):
 
 # signup page
 def user_signup(request):
-  if request.method == 'POST':
-    form = SignupForm(request.POST)
-    if form.is_valid():
-      form.save()
-      return redirect('home')
-  else:
-    form = SignupForm()
-  return render(request, 'mh_tracker/signup.html', {'form': form})
-
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            subject = 'Welcome to Spectrum Diary: Mental Health Tracker'
+            message = f'Hi {username}! We are glad to see you taking steps to improve your mental health.'
+            recipiant_email = [form.cleaned_data['email']]
+            from_email = EMAIL_HOST_USER
+            send_mail(subject, message, from_email, recipiant_email, fail_silently=False)
+            form.save()
+            return redirect('home')
+    else:
+        form = SignupForm()
+    return render(request, 'mh_tracker/signup.html', {'form': form})
 
 # login page
 def user_login(request):
@@ -52,8 +59,7 @@ def user_logout(request):
 
 
 #User can long in their journal entry
-
-
+@login_required
 def journal_entry(request):
   if request.method == 'POST':
     journal_Entry = JournalEntry(user=request.user,
@@ -102,6 +108,7 @@ def settings(request):
     return render(request, 'mh_tracker/settings.html')
 
 
+@login_required
 def analytics(request):
   if request.method == 'POST':
     #Redirect to the homepage
@@ -111,6 +118,57 @@ def analytics(request):
     return render(request, 'mh_tracker/analytics.html')
 
 
+def substance_abuse_chart(request):
+  user = request.user
+  substance_data = SubstanceAbuseTracking.objects.filter(
+      user=user).order_by('date')
+
+  dates = [entry.date.strftime('%Y-%m-%d') for entry in substance_data]
+  counters = [entry.counter for entry in substance_data]
+
+  context = {
+      'substance_data': substance_data,
+      'dates': dates,
+      'counters': counters,
+  }
+
+  return render(request, 'mh_tracker/substance_abuse_chart.html', context)
+
+
+@login_required
+def update_substance_use(request, action):
+  if request.method == 'POST':
+    today = now().date()
+    entry, created = SubstanceAbuseTracking.objects.get_or_create(
+        user=request.user,
+        date=today,
+        defaults={
+            'days_sober': 0,
+            'counter': 0
+        }  # defaults are used if a new entry is created
+    )
+    if action == 'increment':
+      entry.counter += 1
+      entry.save()
+    elif action == 'reset':
+      entry.counter = 0
+      entry.save()
+    return HttpResponseRedirect(reverse('substance_abuse_chart'))
+  else:
+    return HttpResponseRedirect(reverse('home'))
+@login_required
+# View user progression
+def user_progression(request):
+  '''
+  Gathers journal entry ratings and dates to display progression
+  Convert data into JSON for Chart.js visulization 
+  '''
+  journal_entries = JournalEntry.objects.filter(user=request.user).order_by('-date_created')
+  dates = [entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries]
+  moods = [entry.mood_level for entry in journal_entries]
+  return JsonResponse(data={'dates': dates, 'moods': moods})
+
+'''
 def userPage(request, user_id):
   app_user = User.objects.get(id=user_id)
   profile = Profile.objects.get(user=app_user)
@@ -124,8 +182,7 @@ def userPage(request, user_id):
       return redirect('user_detail')
   context = {'form': form, 'app_user': app_user, 'profile': profile}
   return render(request, 'mh_tracker/user_form.html', context)
-
-
+'''
 def rescourcesPage(request):
   videos = Videos.objects.all()
   articles = Article.objects.all()
