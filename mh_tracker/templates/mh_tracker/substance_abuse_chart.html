@@ -4,58 +4,53 @@
     <meta charset="UTF-8" />
     <title>Substance Abuse Tracking Chart</title>
     <script>
-      function incrementCounter() {
-        fetch("{% url 'increment_substance_counter' %}", {
-          method: "POST",
-          headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-          },
-        })
-          .then((response) => {
-            if (response.ok) {
-              // Reload the page to update the counter
-              window.location.reload();
-            } else {
-              console.error("Failed to increment counter");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
+      // Hardcoded positive quotes
+      const positiveQuotes = [
+        "Believe you can and you're halfway there.",
+        "Stay positive and happy. Work hard and don't give up hope.",
+        "The only limit to our realization of tomorrow will be our doubts of today.",
+        "Recovery is possible with determination and support.",
+        "Every day is a new beginning on the path to sobriety.",
+        "Believe in yourself and your ability to overcome addiction.",
+        "You are stronger than your cravings.",
+        "Sobriety is a gift you give yourself.",
+        "One step at a time, you can break free from substance abuse.",
+        "Your past does not define your future.",
+        "Choose recovery every day, one moment at a time.",
+        "You are worthy of a healthy and happy life without substances.",
+        "Courage is the first step towards recovery.",
+        "Stay positive and focused on your journey to sobriety.",
+        "Celebrate each day sober as a victory.",
+        "Seek support and surround yourself with positivity.",
+        "Change is possible, one decision at a time.",
+        "Your health and well-being are worth the effort to overcome addiction.",
+        "You have the strength within you to conquer substance abuse.",
+        "Recovery is a journey, not a destination.",
+        "Embrace sobriety as a new way of life.",
+        "Find joy in the moments of clarity and peace without substances.",
+        "Keep moving forward, even when the road is challenging.",
+        "Recovery is not a race, it's a journey. Enjoy the ride.",
+        "You are worth more than your struggles. Embrace your strength.",
+        "Sobriety opens the door to a life full of possibilities.",
+        "Breaking free from addiction is a courageous choice. You are brave.",
+        "Every sober day is a step towards a brighter future.",
+      ];
 
-      function resetCounter() {
-        fetch("{% url 'reset_substance_counter' %}", {
-          method: "POST",
-          headers: {
-            "X-CSRFToken": "{{ csrf_token }}",
-          },
-        })
-          .then((response) => {
-            if (response.ok) {
-              // Reload the page to update the counter
-              window.location.reload();
-            } else {
-              console.error("Failed to reset counter");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
+      // Randomly select a quote to display
+      const randomQuote =
+        positiveQuotes[Math.floor(Math.random() * positiveQuotes.length)];
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("positive-quotes").innerText = randomQuote;
+      });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <h1>Substance Abuse Tracking Chart</h1>
     <div>
-      {% if substance_data %}
-      <p>Days Sober: {{ substance_data.days_sober }}</p>
-      {% else %}
-      <p>No data available</p>
-      {% endif %}
+      <h2 id="positive-quotes"></h2>
     </div>
-    <button onclick="incrementCounter()">Increment Counter</button>
-    <button onclick="resetCounter()">Reset Counter</button>
   </body>
 </html>
 {% endblock %}

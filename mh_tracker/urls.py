@@ -17,10 +17,4 @@ urlpatterns = [
     path('substance_abuse_chart/',
          views.substance_abuse_chart,
          name='substance_abuse_chart'),
-    path('increment_substance_counter/',
-         views.increment_substance_counter,
-         name='increment_substance_counter'),
-    path('reset_substance_counter/',
-         views.reset_substance_counter,
-         name='reset_substance_counter'),
 ]

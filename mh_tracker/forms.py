@@ -17,10 +17,3 @@ class SignupForm(UserCreationForm):
 class LoginForm(forms.Form):
   username = forms.CharField()
   password = forms.CharField(widget=forms.PasswordInput)
-
-
-class SubstanceAbuseTrackingForm(forms.ModelForm):
-
-  class Meta:
-    model = SubstanceAbuseTracking
-    fields = ['counter', 'days_sober']

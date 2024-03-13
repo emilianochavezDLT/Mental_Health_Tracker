@@ -5,8 +5,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SignupForm, LoginForm
 from .models import SubstanceAbuseTracking
-import random
-from django.contrib.auth.models import AnonymousUser
 
 
 # Create your views here.
@@ -109,8 +107,9 @@ def analytics(request):
 
 
 def substance_abuse_chart(request):
-  user = request.user if not isinstance(request.user, AnonymousUser) else None
-  substance_data = SubstanceAbuseTracking.objects.filter(user=user).first()
+  user = request.user
+  substance_data = SubstanceAbuseTracking.objects.filter(
+      user=user).order_by('date')
 
   context = {
       'substance_data': substance_data,
@@ -120,20 +119,27 @@ def substance_abuse_chart(request):
 
 
 def increment_substance_counter(request):
-  substance_data = SubstanceAbuseTracking.objects.filter(
-      user=request.user).first()
+  user = request.user
+  substance_data = SubstanceAbuseTracking.objects.filter(user=user).first()
   if substance_data:
     substance_data.counter += 1
     substance_data.save()
-
-  return redirect('substance_abuse_chart')
+  else:
+    substance_data = SubstanceAbuseTracking(user=user, counter=1)
+    substance_data.save()
+  # Update the chart data after incrementing the counter
+  # You may need to update the chart data in your frontend accordingly
+  return JsonResponse(
+      {'message': 'Substance counter incremented successfully'})
 
 
 def reset_substance_counter(request):
-  substance_data = SubstanceAbuseTracking.objects.filter(
-      user=request.user).first()
+  user = request.user
+  substance_data = SubstanceAbuseTracking.objects.filter(user=user).first()
   if substance_data:
-    substance_data.days_sober = 0
+    substance_data.counter = 0
     substance_data.save()
-
-  return redirect('substance_abuse_chart')
+    # You may need to update the chart data in your frontend accordingly
+    return JsonResponse({'message': 'Substance counter reset successfully'})
+  else:
+    return JsonResponse({'error': 'No substance data found for the user'})
