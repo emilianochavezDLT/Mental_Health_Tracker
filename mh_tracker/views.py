@@ -7,6 +7,9 @@ from .forms import SignupForm, LoginForm
 from .models import SubstanceAbuseTracking
 from django.urls import reverse
 from django.utils.timezone import now
+from django.core.mail import send_mail
+from django_project.settings import EMAIL_HOST_USER
+
 
 
 # Create your views here.
@@ -16,15 +19,20 @@ def home(request):
 
 # signup page
 def user_signup(request):
-  if request.method == 'POST':
-    form = SignupForm(request.POST)
-    if form.is_valid():
-      form.save()
-      return redirect('home')
-  else:
-    form = SignupForm()
-  return render(request, 'mh_tracker/signup.html', {'form': form})
-
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            subject = 'Welcome to Spectrum Diary: Mental Health Tracker'
+            message = f'Hi {username}! We are glad to see you taking steps to improve your mental health.'
+            recipiant_email = [form.cleaned_data['email']]
+            from_email = EMAIL_HOST_USER
+            send_mail(subject, message, from_email, recipiant_email, fail_silently=False)
+            form.save()
+            return redirect('home')
+    else:
+        form = SignupForm()
+    return render(request, 'mh_tracker/signup.html', {'form': form})
 
 # login page
 def user_login(request):
@@ -146,3 +154,30 @@ def update_substance_use(request, action):
     return HttpResponseRedirect(reverse('substance_abuse_chart'))
   else:
     return HttpResponseRedirect(reverse('home'))
+@login_required
+# View user progression
+def user_progression(request):
+  '''
+  Gathers journal entry ratings and dates to display progression
+  Convert data into JSON for Chart.js visulization 
+  '''
+  journal_entries = JournalEntry.objects.filter(user=request.user).order_by('-date_created')
+  dates = [entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries]
+  moods = [entry.mood_level for entry in journal_entries]
+  return JsonResponse(data={'dates': dates, 'moods': moods})
+
+'''
+def userPage(request, user_id):
+  app_user = User.objects.get(id=user_id)
+  profile = Profile.objects.get(user=app_user)
+  form = UserForm()
+  if request.method == 'POST':
+          user_data = request.POST.copy()
+          form = UserForm(user_data)
+          if form.is_valid():
+              appuser = form.save(commit=False)
+              appuser.user = app_user
+              return redirect('user_detail')
+  context = {'form': form, 'app_user':app_user, 'profile':profile}
+  return render(request, 'mh_tracker/user_form.html', context)
+'''

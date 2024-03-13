@@ -24,8 +24,10 @@ SECRET_KEY = 'django-insecure-4ju2n@$f9d0c=h)_g0lbb%k9&@rf(xa$d$g$&5ri$uf)*gev^4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".replit.dev", ".replit.app", "*"]
-CSRF_TRUSTED_ORIGINS = ["https://*.replit.dev", "https://*.replit.app"]
+ALLOWED_HOSTS = [".replit.dev", ".replit.app", ".repl.co"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.replit.dev", "https://*.replit.app", "https://*.picard.repl.co"
+]
 
 # Application definition
 
@@ -107,3 +109,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
+
+#Currently only prints to console
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.mail.yahoo.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 465  #For SSL??
+#EMAIL_PORT = 587 #For TSL??
+EMAIL_USE_SSL = True
+Email_USE_TSL = False
