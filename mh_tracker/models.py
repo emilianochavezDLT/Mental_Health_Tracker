@@ -21,3 +21,30 @@ class JournalEntry(models.Model):
 
 
 
+
+'''
+The articles models and videos models are part the of the
+resources portion of the application.
+
+The article takes in a pdf file,title, and description.
+
+The video model takes in a video file, title, and description.
+'''
+class Article(models.Model):
+  title = models.CharField(max_length=100)
+  description = models.TextField()
+  pdf = models.FileField(upload_to='resources/')
+  
+class Videos(models.Model):
+  title = models.CharField(max_length=100)
+  description = models.TextField()
+  video_link = models.URLField(blank=True, null=True) #For youtube videos
+  video_file = models.FileField(upload_to='resources/', blank=True, null=True)
+
+  #These are two helper methods to determine if a video is a link or file
+  def is_video_link(self):
+    return bool(self.video_link)
+
+  def is_uploaded_video(self):
+    return bool(self.video_file)
+
