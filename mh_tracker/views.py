@@ -170,23 +170,29 @@ def update_substance_use(request, action):
 @login_required
 # View user progression
 def user_progression(request):
-  '''
-  Gathers journal entry ratings and dates to display progression
-  Convert data into JSON for Chart.js visulization 
-  '''
-  journal_entries = JournalEntry.objects.filter(
-      user=request.user).order_by('-date_created')
-  #List all model data to be passed
-  data = {
-      'data':[entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries],
-      'mood_levels': [entry.mood_level for entry in journal_entries],
-      'sleep_quality': [entry.sleep_quality for entry in journal_entries],
-      'exercise_time': [entry.exercise_time for entry in journal_entries],
-      'diet_quality': [entry.diet_quality for entry in journal_entries],
-      'water_intake': [entry.water_intake for entry in journal_entries],
-    
-}
-  return JsonResponse(data)
+    '''
+    Gathers journal entry ratings and dates to display progression
+    Convert data into JSON for Chart.js visulization 
+
+    '''
+
+    journal_entries = JournalEntry.objects.filter(user=request.user).order_by('date_created')
+    dates = [entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries]
+    moods = [entry.mood_level for entry in journal_entries]
+    sleep = [entry.sleep_quality for entry in journal_entries]
+    excercise = [entry.exercise_time for entry in journal_entries]
+    diet = [entry.diet_quality for entry in journal_entries]
+    water = [entry.water_intake for entry in journal_entries]
+    context =  {
+        'dates': dates,
+        'moods': moods,
+        'sleep': sleep,
+        'excercise': excercise,
+        'diet': diet,
+        'water': water,
+        
+    }
+    return JsonResponse(data=context)
 
 
 '''

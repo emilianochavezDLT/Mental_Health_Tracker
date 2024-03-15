@@ -1,7 +1,7 @@
 {% extends "mh_tracker/base_template.html" %}
 
 {% block content %}
-<canvas id="progressionChart"></canvas>
+<canvas id="progressionChart" ></canvas>
 <!-- Store URL in a hidden div element -->
 <div id="progressionUrl" data-url="{% url 'user_progression' %}" style="display: none;"></div>
 
@@ -25,35 +25,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     datasets: [
                         {
                             label: 'Mood Level',
-                            data: data.mood_levels,
+                            data: data.moods,
                             borderColor: 'rgba(255, 99, 132, 1)',
-                            fill: false,
+                            fill: false, 
+                            
                         },
                         {
                             label: 'Sleep Quality',
-                            data: data.sleep_quality,
+                            data: data.sleep,
                             borderColor: 'rgba(54, 162, 235, 1)',
                             fill: false,
                         },
                         {
                             label: 'Exercise Time',
-                            data: data.exercise_time,
+                            data: data.excercise,
                             borderColor: 'rgba(255, 206, 86, 1)',
                             fill: false,
                         },
                         {
                             label: 'Diet Quality',
-                            data: data.diet_quality,
+                            data: data.diet,
                             borderColor: 'rgba(75, 192, 192, 1)',
                             fill: false,
                         },
-                        {
                             label: 'Water Intake',
-                            data: data.water_intake,
+                            data: data.water,
                             borderColor: 'rgba(153, 102, 255, 1)',
                             fill: false,
-                        }
-                      
+                        },
                     ]
                 },
                 options: {
