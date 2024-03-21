@@ -28,16 +28,7 @@ def user_signup(request):
   if request.method == 'POST':
     form = SignupForm(request.POST)
     if form.is_valid():
-      username = form.cleaned_data['username']
-      subject = 'Welcome to Spectrum Diary: Mental Health Tracker'
-      message = f'Hi {username}! We are glad to see you taking steps to improve your mental health.'
-      recipiant_email = [form.cleaned_data['email']]
-      from_email = EMAIL_HOST_USER
-      send_mail(subject,
-                message,
-                from_email,
-                recipiant_email,
-                fail_silently=False)
+      form.send_email()
       form.save()
       return redirect('home')
   else:

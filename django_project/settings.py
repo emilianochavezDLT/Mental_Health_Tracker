@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mh_tracker',
     'bootstrap5',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -111,7 +112,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 
 #Currently only prints to console
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smptp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.yahoo.com'
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
@@ -119,3 +120,11 @@ EMAIL_PORT = 465  #For SSL??
 #EMAIL_PORT = 587 #For TSL??
 EMAIL_USE_SSL = True
 Email_USE_TSL = False
+
+
+#Celery Configurations
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
