@@ -118,6 +118,7 @@ def analytics(request):
     return render(request, 'mh_tracker/analytics.html')
 
 
+@login_required
 def substance_abuse_chart(request):
   user = request.user
   substance_data = SubstanceAbuseTracking.objects.filter(
@@ -161,29 +162,31 @@ def update_substance_use(request, action):
 @login_required
 # View user progression
 def user_progression(request):
-    '''
+  '''
     Gathers journal entry ratings and dates to display progression
     Convert data into JSON for Chart.js visulization 
 
     '''
 
-    journal_entries = JournalEntry.objects.filter(user=request.user).order_by('date_created')
-    dates = [entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries]
-    moods = [entry.mood_level for entry in journal_entries]
-    sleep = [entry.sleep_quality for entry in journal_entries]
-    excercise = [entry.exercise_time for entry in journal_entries]
-    diet = [entry.diet_quality for entry in journal_entries]
-    water = [entry.water_intake for entry in journal_entries]
-    context =  {
-        'dates': dates,
-        'moods': moods,
-        'sleep': sleep,
-        'excercise': excercise,
-        'diet': diet,
-        'water': water,
-        
-    }
-    return JsonResponse(data=context)
+  journal_entries = JournalEntry.objects.filter(
+      user=request.user).order_by('date_created')
+  dates = [
+      entry.date_created.strftime('%Y-%m-%d') for entry in journal_entries
+  ]
+  moods = [entry.mood_level for entry in journal_entries]
+  sleep = [entry.sleep_quality for entry in journal_entries]
+  excercise = [entry.exercise_time for entry in journal_entries]
+  diet = [entry.diet_quality for entry in journal_entries]
+  water = [entry.water_intake for entry in journal_entries]
+  context = {
+      'dates': dates,
+      'moods': moods,
+      'sleep': sleep,
+      'excercise': excercise,
+      'diet': diet,
+      'water': water,
+  }
+  return JsonResponse(data=context)
 
 
 '''
