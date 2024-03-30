@@ -80,7 +80,14 @@
   <body>
     <header>
       <h1 align="center">Spectrum Diary</h1>
-      <button id="hamburger" class="openbtn" background="indigo" onclick=openNav()>☰</button>
+      <button
+        id="hamburger"
+        class="openbtn"
+        background="indigo"
+        onclick="openNav()"
+      >
+        ☰
+      </button>
     </header>
     <div id="sideSlide" class="sidebar text-warning">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
@@ -89,7 +96,8 @@
       <a class="nav-link" href="{% url 'color_calendar' %}">Calendar</a>
       <a class="nav-link" href="{% url 'analytics' %}">Analytics</a>
       <a class="nav-link" href="{% url 'substance_abuse_chart' %}"
-        >Substance Abuse Chart</a>
+        >Substance Abuse Chart</a
+      >
       <a class="nav-link" href="{% url 'resources' %}">Resources</a>
       <a class="nav-link" href="{% url 'settings' %}">Settings</a>
     </div>
@@ -98,7 +106,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
+    <script>
       function openNav() {
         document.getElementById("sideSlide").style.width = "250px";
         document.getElementById("main").style.marginLeft = "250px";
@@ -107,9 +115,9 @@
 
       function closeNav() {
         document.getElementById("sideSlide").style.width = "0";
-        document.getElementById("main").style.marginLeft= "0";
+        document.getElementById("main").style.marginLeft = "0";
         document.getElementById("hamburger").style.opacity = "1";
       }
-</script>
+    </script>
   </body>
 </html>

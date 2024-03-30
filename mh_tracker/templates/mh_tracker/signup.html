@@ -1,11 +1,8 @@
-{% extends "mh_tracker/base_template.html" %}
-
-{% block content %}
-  <h2>Sign Up</h2>
+{% extends "mh_tracker/base_template.html" %} {% block content %}
+<h2>Sign Up</h2>
 <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Signup</button>
-    <a href="{% url 'login' %}">Already have account?</a>
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Signup</button>
+  <a href="{% url 'login' %}">Already have account?</a>
 </form>
 {% endblock %}

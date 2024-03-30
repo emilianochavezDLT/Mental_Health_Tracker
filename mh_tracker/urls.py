@@ -23,7 +23,7 @@ urlpatterns = [
          name='reset_substance_use'),
     #path('user/<int:pk>progression', views.UserView.as_view(), name="user_detail"),
     path('user/progression', views.user_progression, name="user_progression"),
-     path('get_journal_entries/',
+    path('get_journal_entries/',
          views.get_journal_entries,
          name='get_journal_entries'),
     path('resources/', views.rescourcesPage, name='resources'),
