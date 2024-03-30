@@ -68,3 +68,26 @@ class URLAccessTestCase(TestCase):
     response = self.client.get(reverse('journal_entry'))
 
     self.assertTrue(response.status_code, 302)
+
+
+class JournalEntryTestCase(TestCase):
+
+  def setUp(self):
+
+    self.user = User.objects.create_user(username='testuser', password='12345')
+    self.client.login(username='testuser', password='12345')
+
+  def test_journal_entry(self):
+    request = {
+        'user': self.user,
+        'date_created': datetime.today(),
+        'mood_level': 5,
+        'sleep_quality': 4,
+        'exercise_time': 3,
+        'diet_quality': 2,
+        'water_intake': 1,
+        'journal_text': 'Test entry'
+    }
+
+    self.client.post(reverse('journal_entry'), request)
+    self.assertTrue(JournalEntry.objects.filter(user=self.user).exists())
