@@ -89,7 +89,7 @@ def get_journal_entries(request):
 
   return JsonResponse(mood_data)
 
-
+@login_required
 def color_calendar(request):
   if request.method == 'POST':
     #Redirect to the homepage
