@@ -31,11 +31,10 @@
         height: 100%;
         width: 0;
         position: fixed;
-        z-index: 1;
+        z-index: 1000;
         top: 0;
         left: 0;
         background-color: indigo;
-        opacity: 0.5;
         overflow-x: hidden;
         transition: 0.2s;
         padding-top: 60px;
@@ -45,14 +44,14 @@
         padding: 8px 8px 8px 32px;
         text-decoration: none;
         font-size: 25px;
-        color: yellow;
+        color: black;
         display: block;
         transition: 0.3s;
       }
 
       .sidebar a:hover {
         color: #f111f1;
-      }
+      } 
 
       .sidebar .closebtn {
         font-size: 36px;
@@ -65,10 +64,44 @@
         color: white;
         padding: 10px 15px;
         border: none;
+        position: absolute;
       }
 
       .openbtn:hover {
-        background-color: gold;
+        background-color: indigo;
+      }
+      .closebtn {
+        font-size: 20px; 
+        cursor: pointer;
+        color: white;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
+
+      /* Adjust the hover effect */
+      .closebtn:hover {
+        color: gold;
+      }
+      .nav_br{
+        width:300vmax;
+      }
+      .nav-column { 
+        color: white; 
+      }
+      .nav-link {
+        background-color: white;     
+        border: none; 
+        padding: 20px 20px; 
+        margin-bottom: 5px; 
+        margin-top: 5px; 
+        display: block; 
+        text-align: left; 
+        text-decoration: none; 
+        border-radius: 5px;
+      }
+      .nav-link:hover {
+        background-color: #eee; 
       }
 
       #main {
@@ -79,7 +112,6 @@
   </head>
   <body>
     <header>
-      <h1 align="center">Spectrum Diary</h1>
       <button
         id="hamburger"
         class="openbtn"
@@ -88,9 +120,11 @@
       >
         ☰
       </button>
+      <h1 align="center">Spectrum Diary</h1>
     </header>
+
     <div id="sideSlide" class="sidebar text-warning">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">X</a>
       <a class="nav-link" href="{% url 'home'%}">Home</a>
       <a class="nav-link" href="{% url 'journal_entry' %}">Today's Journal</a>
       <a class="nav-link" href="{% url 'color_calendar' %}">Calendar</a>
