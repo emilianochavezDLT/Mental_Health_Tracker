@@ -211,3 +211,14 @@ def rescourcesPage(request):
   articles = Article.objects.all()
   context = {'videos': videos, 'articles': articles}
   return render(request, 'mh_tracker/resources.html', context)
+
+
+#The secure data sharing feature is a feature that allows users to share their data with medical professionals.
+#This feature puts all of the user's data into a html file and converts it into a pdf file, which is then sent to the medical professional as a email.
+def secure_data_sharing(request):
+  if request.method == 'POST':
+    #Redirect to the homepage
+    return redirect('mh_tracker/home.html')
+  
+
+  
