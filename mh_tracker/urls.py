@@ -27,4 +27,5 @@ urlpatterns = [
          views.get_journal_entries,
          name='get_journal_entries'),
     path('resources/', views.rescourcesPage, name='resources'),
+    path('reports/', views.reports, name='reports'),
 ]

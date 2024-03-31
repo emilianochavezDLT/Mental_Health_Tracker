@@ -11,7 +11,9 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from django_project.settings import EMAIL_HOST_USER
+from django.db.models import Q
 import requests
+import datetime as datetime
 
 
 # Create your views here.
@@ -211,3 +213,70 @@ def rescourcesPage(request):
   articles = Article.objects.all()
   context = {'videos': videos, 'articles': articles}
   return render(request, 'mh_tracker/resources.html', context)
+
+
+@login_required
+def reports(request):
+  #Dictionary for passing in context
+  context = {}
+
+  #Gets the Journal Entries for the user for the past 31 days
+  d = datetime.date.today() - datetime.timedelta(days=31)
+  data = JournalEntry.objects.filter(user=request.user, date_created__gte=d)
+
+  itemList = ["mood", "sleep", "exercise", "diet", "water"]
+  searchList = [
+      "mood_level", "sleep_quality", "exercise_time", "diet_quality",
+      "water_intake"
+  ]
+  #Loops through the lists to collect data
+  #for item in itemList:
+  #temp_data = data.filter(item+'__lte'=2)
+
+  #Gathers the mood data and adds it to the context dictionary
+  temp_data = data.filter(mood_level__lte=2)
+  context.update({"mood_negative": temp_data.count()})
+  temp_data = data.filter(mood_level=3)
+  context.update({"mood_neutral": temp_data.count()})
+  temp_data = data.filter(mood_level__gte=4)
+  context.update({"mood_positive": temp_data.count()})
+
+  #Gathers the sleep data and adds it to the context dictionary
+  temp_data = data.filter(sleep_quality__lte=2)
+  context.update({"sleep_negative": temp_data.count()})
+  temp_data = data.filter(sleep_quality=3)
+  context.update({"sleep_neutral": temp_data.count()})
+  temp_data = data.filter(sleep_quality__gte=4)
+  context.update({"sleep_positive": temp_data.count()})
+
+  #Gathers the exercise data and adds it to the context dictionary
+  temp_data = data.filter(exercise_time__lte=2)
+  context.update({"exercise_negative": temp_data.count()})
+  temp_data = data.filter(exercise_time=3)
+  context.update({"exercise_neutral": temp_data.count()})
+  temp_data = data.filter(exercise_time__gte=4)
+  context.update({"exercise_positive": temp_data.count()})
+
+  #Gathers the diet data and adds it to the context dictionary
+  temp_data = data.filter(diet_quality__lte=2)
+  context.update({"diet_negative": temp_data.count()})
+  temp_data = data.filter(diet_quality=3)
+  context.update({"diet_neutral": temp_data.count()})
+  temp_data = data.filter(diet_quality__gte=4)
+  context.update({"diet_positive": temp_data.count()})
+
+  #Gathers the water data and adds it to the context dictionary
+  temp_data = data.filter(water_intake__lte=2)
+  context.update({"water_negative": temp_data.count()})
+  temp_data = data.filter(water_intake=3)
+  context.update({"water_neutral": temp_data.count()})
+  temp_data = data.filter(water_intake__gte=4)
+  context.update({"water_positive": temp_data.count()})
+
+  #Gathers the journal entry data and adds it to the context dictionary
+  temp_data = data.filter(journal_text="")
+  context.update({"journal_entries_negative": temp_data.count()})
+  temp_data = data.filter(~Q(journal_text=""))
+  context.update({"journal_entries_positive": temp_data.count()})
+
+  return render(request, 'mh_tracker/reports.html', context)
