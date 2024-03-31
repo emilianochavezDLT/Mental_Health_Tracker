@@ -91,6 +91,7 @@ def get_journal_entries(request):
 
   return JsonResponse(mood_data)
 
+
 @login_required
 def color_calendar(request):
   if request.method == 'POST':
@@ -223,15 +224,6 @@ def reports(request):
   #Gets the Journal Entries for the user for the past 31 days
   d = datetime.date.today() - datetime.timedelta(days=31)
   data = JournalEntry.objects.filter(user=request.user, date_created__gte=d)
-
-  itemList = ["mood", "sleep", "exercise", "diet", "water"]
-  searchList = [
-      "mood_level", "sleep_quality", "exercise_time", "diet_quality",
-      "water_intake"
-  ]
-  #Loops through the lists to collect data
-  #for item in itemList:
-  #temp_data = data.filter(item+'__lte'=2)
 
   #Gathers the mood data and adds it to the context dictionary
   temp_data = data.filter(mood_level__lte=2)
