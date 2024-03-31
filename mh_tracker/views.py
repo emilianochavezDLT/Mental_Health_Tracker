@@ -59,7 +59,7 @@ def user_logout(request):
 
 
 #User can long in their journal entry
-@login_required
+#@login_required
 def journal_entry(request):
   if request.method == 'POST':
     journal_Entry = JournalEntry(user=request.user,
@@ -108,7 +108,7 @@ def settings(request):
     return render(request, 'mh_tracker/settings.html')
 
 
-@login_required
+#@login_required
 def analytics(request):
   if request.method == 'POST':
     #Redirect to the homepage
@@ -118,7 +118,7 @@ def analytics(request):
     return render(request, 'mh_tracker/analytics.html')
 
 
-@login_required
+#@login_required
 def substance_abuse_chart(request):
   user = request.user
   substance_data = SubstanceAbuseTracking.objects.filter(
@@ -136,7 +136,7 @@ def substance_abuse_chart(request):
   return render(request, 'mh_tracker/substance_abuse_chart.html', context)
 
 
-@login_required
+#@login_required
 def update_substance_use(request, action):
   if request.method == 'POST':
     today = now().date()
@@ -159,7 +159,7 @@ def update_substance_use(request, action):
     return HttpResponseRedirect(reverse('home'))
 
 
-@login_required
+#@login_required
 # View user progression
 def user_progression(request):
   '''
@@ -216,9 +216,15 @@ def rescourcesPage(request):
 #The secure data sharing feature is a feature that allows users to share their data with medical professionals.
 #This feature puts all of the user's data into a html file and converts it into a pdf file, which is then sent to the medical professional as a email.
 def secure_data_sharing(request):
-  if request.method == 'POST':
-    #Redirect to the homepage
-    return redirect('mh_tracker/home.html')
-  
+  user = request.user
+  substance_data = SubstanceAbuseTracking.objects.filter(user=user)  
+  dates = [entry.date.strftime('%Y-%m-%d') for entry in substance_data]
+  counters = [entry.counter for entry in substance_data]
+  context = {
+      'substance_data': substance_data,
+      'dates': dates,
+      'counters': counters,
+    
+  }
 
-  
+  return render(request, 'mh_tracker/secure_data_sharing.html', context)
