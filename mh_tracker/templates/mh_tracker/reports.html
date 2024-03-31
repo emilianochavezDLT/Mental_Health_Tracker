@@ -1,0 +1,100 @@
+{% extends "mh_tracker/base_template.html" %} {% block content %}
+
+<style>
+  .container {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .card {
+    display: inline-block;
+    height: 150px;
+    width: 400px !important;
+    margin: 10px;
+  }
+
+  .card-text {
+    margin-left: 10px;
+  }
+</style>
+
+<div class="container">
+  <h2>Monthly Report</h2>
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">Mood</h5>
+      <p id="mood" class="card-text">
+        You had a positive mood for {{ mood_positive }} days.<br />
+        You had a normal mood for {{ mood_neutral }} days.<br />
+        You had anegative mood for {{ mood_negative }} days.
+      </p>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">Sleep</h5>
+      <p id="sleep" class="card-text">
+        You had {{ sleep_negative }} days with low energy.<br />
+        You had {{ sleep_neutral }} days with medium energy.<br />
+        You had {{ sleep_positive }} days with high energy.
+      </p>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">Exercise</h5>
+      <p id="exercise" class="card-text">
+        You had {{ exercise_negative }} days with minimal exercise.<br />
+        You had {{ exercise_neutral }} days with medium exercise.<br />
+        You had {{ exercise_positive }} days with a lot of exercise.
+      </p>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">Diet</h5>
+      <p id="diet" class="card-text">
+        You had an unhealthy diet for {{ diet_negative }} days.<br />
+        You had a neutral diet for {{ diet_neutral }} days.<br />
+        You had a healthy diet for {{ diet_positive }} days.
+      </p>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">Water Intake</h5>
+      <p id="water" class="card-text">
+        You had a low amount of water on {{ water_negative }} days.<br />
+        You had a medium amount of water on {{ water_neutral }} days.<br />
+        You had a large amount of water on {{ water_positive }} days.
+      </p>
+    </div>
+  </div>
+  <div class="card" style="width: 18rem">
+    <div class="card-body">
+      <h5 class="card-title">Journal Entries</h5>
+      <p id="water" class="card-text">
+        You entered a journal for {{ journal_entries_positive }} days.<br />
+        You did not enter a journal for {{ journal_entries_negative }} days.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const mood = document.getElementById("mood");
+  const sleep = document.getElementById("sleep");
+  const exercise = document.getElementById("exercise");
+  const diet = document.getElementById("diet");
+  const water = document.getElementById("water");
+
+  function generateReport() {
+    mood.text = "You had a positive mood for ${mood} days.";
+  }
+</script>
+
+{% endblock %}

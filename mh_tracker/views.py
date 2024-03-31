@@ -11,7 +11,9 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from django_project.settings import EMAIL_HOST_USER
+from django.db.models import Q
 import requests
+import datetime as datetime
 
 
 # Create your views here.
@@ -90,6 +92,7 @@ def get_journal_entries(request):
   return JsonResponse(mood_data)
 
 
+@login_required
 def color_calendar(request):
   if request.method == 'POST':
     #Redirect to the homepage
@@ -213,18 +216,59 @@ def rescourcesPage(request):
   return render(request, 'mh_tracker/resources.html', context)
 
 
-#The secure data sharing feature is a feature that allows users to share their data with medical professionals.
-#This feature puts all of the user's data into a html file and converts it into a pdf file, which is then sent to the medical professional as a email.
-def secure_data_sharing(request):
-  user = request.user
-  substance_data = SubstanceAbuseTracking.objects.filter(user=user)  
-  dates = [entry.date.strftime('%Y-%m-%d') for entry in substance_data]
-  counters = [entry.counter for entry in substance_data]
-  context = {
-      'substance_data': substance_data,
-      'dates': dates,
-      'counters': counters,
-    
-  }
+@login_required
+def reports(request):
+  #Dictionary for passing in context
+  context = {}
 
-  return render(request, 'mh_tracker/secure_data_sharing.html', context)
+  #Gets the Journal Entries for the user for the past 31 days
+  d = datetime.date.today() - datetime.timedelta(days=31)
+  data = JournalEntry.objects.filter(user=request.user, date_created__gte=d)
+
+  #Gathers the mood data and adds it to the context dictionary
+  temp_data = data.filter(mood_level__lte=2)
+  context.update({"mood_negative": temp_data.count()})
+  temp_data = data.filter(mood_level=3)
+  context.update({"mood_neutral": temp_data.count()})
+  temp_data = data.filter(mood_level__gte=4)
+  context.update({"mood_positive": temp_data.count()})
+
+  #Gathers the sleep data and adds it to the context dictionary
+  temp_data = data.filter(sleep_quality__lte=2)
+  context.update({"sleep_negative": temp_data.count()})
+  temp_data = data.filter(sleep_quality=3)
+  context.update({"sleep_neutral": temp_data.count()})
+  temp_data = data.filter(sleep_quality__gte=4)
+  context.update({"sleep_positive": temp_data.count()})
+
+  #Gathers the exercise data and adds it to the context dictionary
+  temp_data = data.filter(exercise_time__lte=2)
+  context.update({"exercise_negative": temp_data.count()})
+  temp_data = data.filter(exercise_time=3)
+  context.update({"exercise_neutral": temp_data.count()})
+  temp_data = data.filter(exercise_time__gte=4)
+  context.update({"exercise_positive": temp_data.count()})
+
+  #Gathers the diet data and adds it to the context dictionary
+  temp_data = data.filter(diet_quality__lte=2)
+  context.update({"diet_negative": temp_data.count()})
+  temp_data = data.filter(diet_quality=3)
+  context.update({"diet_neutral": temp_data.count()})
+  temp_data = data.filter(diet_quality__gte=4)
+  context.update({"diet_positive": temp_data.count()})
+
+  #Gathers the water data and adds it to the context dictionary
+  temp_data = data.filter(water_intake__lte=2)
+  context.update({"water_negative": temp_data.count()})
+  temp_data = data.filter(water_intake=3)
+  context.update({"water_neutral": temp_data.count()})
+  temp_data = data.filter(water_intake__gte=4)
+  context.update({"water_positive": temp_data.count()})
+
+  #Gathers the journal entry data and adds it to the context dictionary
+  temp_data = data.filter(journal_text="")
+  context.update({"journal_entries_negative": temp_data.count()})
+  temp_data = data.filter(~Q(journal_text=""))
+  context.update({"journal_entries_positive": temp_data.count()})
+
+  return render(request, 'mh_tracker/reports.html', context)
