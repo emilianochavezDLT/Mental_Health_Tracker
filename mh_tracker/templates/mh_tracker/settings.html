@@ -1,17 +1,74 @@
 {% extends "mh_tracker/base_template.html" %} {% block content %}
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5sTyX43PpSkyaxXZ9lgXy3wK8F5"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.3/dist/umd/popper.min.js"
+  integrity="sha384-c6zj9RHtVROk0yyXGecgf81d1pW5dNNytK3s2fLmbvtjUBdj7J1d4SvSDx0amJbe"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"
+  integrity="sha384-QJ6o1VvF2t7u9v0mJFgtJWmOfU7JK0TAEAXRltT/1TkodwiDgVrh6Xty+0LlOwt+"
+  crossorigin="anonymous"
+></script>
+
 <div class="container">
-  {% if user.is_authenticated %}
-  <!-- Display settings for logged-in user -->
-  <h1>Welcome, {{ user.username }}</h1>
-  <!-- Add your settings options here for logged-in users -->
-  <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
-  {% else %}
-  <h1>Login or Sign Up</h1>
-  <form action="{% url 'login' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary">Login</button>
+  <h1>Settings</h1>
+  <label>Name</label>
+  <div class="card">
+    <div class="card-body">First and last Name</div>
+  </div>
+  <form>
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input
+        type="email"
+        class="form-control"
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+      />
+      <div id="emailHelp" class="form-text">
+        We'll never share your email with anyone else.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword1" />
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword1" />
+    </div>
+
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+      <label class="form-check-label" for="exampleCheck1"
+        >Therapist Email (Optional)</label
+      >
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
   </form>
-  <a href="{% url 'signup' %}" class="btn btn-secondary">Sign Up</a>
-  {% endif %}
+
+  <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
 </div>
+
+<!--{% if user.is_authenticated %}-->
+<!-- Display settings for logged-in user -->
+<!--<h1>Welcome, {{ user.username }}</h1>-->
+<!-- Add your settings options here for logged-in users -->
+
+<!--
+{% else %}
+<h1>Login or Sign Up</h1>
+<form action="{% url 'login' %}" method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">Login</button>
+</form>
+<a href="{% url 'signup' %}" class="btn btn-secondary">Sign Up</a>
+{% endif %}
+-->
 {% endblock %}
