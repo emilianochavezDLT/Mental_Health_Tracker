@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
-from .models import JournalEntry, SubstanceAbuseTracking, Article, Videos
+from .models import JournalEntry, SubstanceAbuseTracking, Article, Videos, Therapist
 from datetime import datetime
 
 
@@ -31,6 +31,9 @@ class ModelsTestCase(TestCase):
     self.video = Videos.objects.create(title="Test Video",
                                        description="A test video.",
                                        video_link="https://example.com")
+    
+    self.therapist = Therapist.objects.create(user = self.user, first_name = "John", last_name = "Doe", email = "jd@mail.com",  company = "Therapy Inc.", phone_number = "123-456-7890",)
+
 
   def test_journal_entry_creation(self):
     self.assertEqual(self.journal_entry.mood_level, 5)
@@ -43,6 +46,14 @@ class ModelsTestCase(TestCase):
 
   def test_video_creation(self):
     self.assertEqual(self.video.description, "A test video.")
+
+  def test_therapist_creation(self):
+    self.assertEqual(self.therapist.first_name, "John")
+    self.assertEqual(self.therapist.last_name, "Doe")
+    self.assertEqual(self.therapist.email, "jd@mail.com")
+    self.assertEqual(self.therapist.company, "Therapy Inc.")
+    self.assertEqual(self.therapist.phone_number, "123-456-7890")
+    self.assertEqual(self.therapist.user, self.user)
 
 
 class URLAccessTestCase(TestCase):
