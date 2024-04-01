@@ -14,6 +14,7 @@ from django_project.settings import EMAIL_HOST_USER
 from django.db.models import Q
 import requests
 import datetime as datetime
+import calendar
 
 
 # Create your views here.
@@ -125,19 +126,39 @@ def analytics(request):
 @login_required
 def substance_abuse_chart(request):
   user = request.user
+  start_date, end_date = current_month_date_range()
   substance_data = SubstanceAbuseTracking.objects.filter(
-      user=user).order_by('date')
+      user=user, date__range=(start_date, end_date)).order_by('date')
 
-  dates = [entry.date.strftime('%Y-%m-%d') for entry in substance_data]
-  counters = [entry.counter for entry in substance_data]
+  # Create a dictionary mapping dates to counter values
+  date_counter_map = {
+      entry.date.strftime('%Y-%m-%d'): entry.counter
+      for entry in substance_data
+  }
+
+  # Generate all dates in the current month
+  dates = [
+      start_date + datetime.timedelta(days=x)
+      for x in range((end_date - start_date).days + 1)
+  ]
+  dates_formatted = [date.strftime('%Y-%m-%d') for date in dates]
+
+  # Map each date to its counter, defaulting to 0 if not present
+  counters = [date_counter_map.get(date, 0) for date in dates_formatted]
 
   context = {
-      'substance_data': substance_data,
-      'dates': dates,
+      'dates': dates_formatted,
       'counters': counters,
   }
 
   return render(request, 'mh_tracker/substance_abuse_chart.html', context)
+
+
+def current_month_date_range():
+  now = datetime.date.today()
+  start_date = now.replace(day=1)
+  end_date = now.replace(day=calendar.monthrange(now.year, now.month)[1])
+  return start_date, end_date
 
 
 @login_required
@@ -145,13 +166,7 @@ def update_substance_use(request, action):
   if request.method == 'POST':
     today = now().date()
     entry, created = SubstanceAbuseTracking.objects.get_or_create(
-        user=request.user,
-        date=today,
-        defaults={
-            'days_sober': 0,
-            'counter': 0
-        }  # defaults are used if a new entry is created
-    )
+        user=request.user, date=today, defaults={'counters': 0})
     if action == 'increment':
       entry.counter += 1
       entry.save()
