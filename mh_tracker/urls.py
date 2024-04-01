@@ -28,4 +28,5 @@ urlpatterns = [
          name='get_journal_entries'),
     path('resources/', views.rescourcesPage, name='resources'),
     path('reports/', views.reports, name='reports'),
+    path('add_therapist/', views.add_therapist, name='add_therapist'),
 ]
