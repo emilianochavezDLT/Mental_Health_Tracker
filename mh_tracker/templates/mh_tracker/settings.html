@@ -16,6 +16,11 @@
   crossorigin="anonymous"
 ></script>
 
+{% if user.is_authenticated %}
+<!-- Display settings for logged-in user -->
+<h1>Welcome, {{ user.username }}</h1>
+<!-- Add your settings options here for logged-in users -->
+
 <div class="container">
   <h1>Settings</h1>
   <label>Name</label>
@@ -37,12 +42,6 @@
   </div>
 </div>
 
-<!--{% if user.is_authenticated %}-->
-<!-- Display settings for logged-in user -->
-<!--<h1>Welcome, {{ user.username }}</h1>-->
-<!-- Add your settings options here for logged-in users -->
-
-<!--
 {% else %}
 <h1>Login or Sign Up</h1>
 <form action="{% url 'login' %}" method="post">
@@ -50,6 +49,4 @@
   <button type="submit" class="btn btn-primary">Login</button>
 </form>
 <a href="{% url 'signup' %}" class="btn btn-secondary">Sign Up</a>
-{% endif %}
--->
-{% endblock %}
+{% endif %} {% endblock %}
