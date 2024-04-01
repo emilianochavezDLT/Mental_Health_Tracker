@@ -54,3 +54,23 @@ class Videos(models.Model):
 
   def __str__(self):
     return f"Soberiety record for {self.user.username} on {self.date}"
+
+
+'''
+Creating a model for therapists, so that the user can have a therapist.
+The therapist model will have a one to one relationship with the user model.
+'''
+
+class Therapist(models.Model):
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  first_name = models.CharField(max_length=50)
+  last_name = models.CharField(max_length=50)
+  email = models.EmailField()
+  company = models.CharField(max_length=50)
+  phone_number = models.CharField(max_length=15)
+
+  def __str__(self):
+    return f"Therapist for {self.user.username}"
+
+
+
