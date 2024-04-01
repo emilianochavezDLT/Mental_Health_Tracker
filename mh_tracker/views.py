@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from mh_tracker.models import JournalEntry, User, Article, Videos
+from mh_tracker.models import JournalEntry, User, Article, Videos, Therapist
 from django.http import JsonResponse, HttpResponseRedirect
 from mh_tracker.models import JournalEntry, User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignupForm, LoginForm
+from .forms import SignupForm, LoginForm, TherapistForm
 from .models import SubstanceAbuseTracking
 from django.urls import reverse
 from django.utils.timezone import now
@@ -288,3 +288,27 @@ def reports(request):
   context.update({"journal_entries_positive": temp_data.count()})
 
   return render(request, 'mh_tracker/reports.html', context)
+
+# Add a therapist for the user to have
+def add_therapist(request):
+  if request.method == 'POST':
+    therapist = TherapistForm(request.POST)
+    if therapist.is_valid():
+      therapist.save()
+      return redirect('home')
+  else:
+    therapist = TherapistForm()
+    return render(request, 'mh_tracker/add_therapist.html', {'therapist': therapist})
+  
+# View all therapists
+#I might have to put all of this into the settings view!!
+def view_therapists(request):
+  therapists = Therapist.objects.all()
+  if therapists:
+    return render(request, 'mh_tracker/settings.html', {'therapists': None})
+  else:
+    return render(request, 'mh_tracker/settings.html', {'therapists': therapists})
+
+  
+
+  
