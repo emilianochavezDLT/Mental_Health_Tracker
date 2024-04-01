@@ -17,9 +17,12 @@ import requests
 # Create your views here.
 def home(request):
   quotes = []
-  for i in range(2):
+  for i in range(3):
     r = requests.get('https://zenquotes.io/api/random')
-    quotes.append(r.json()[0]['h'])
+    q=r.json()[0]['q']
+    a=r.json()[0]['a']
+    quote = f"{q} -{a}"
+    quotes.append({i:quote})
   return render(request, 'mh_tracker/home.html', {'quotes': quotes})
 
 

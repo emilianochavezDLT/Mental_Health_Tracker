@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -112,14 +113,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 
 #Currently only prints to console
-EMAIL_BACKEND = 'django.core.mail.backends.smptp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.yahoo.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT = 465  #For SSL??
-#EMAIL_PORT = 587 #For TSL??
-EMAIL_USE_SSL = True
-Email_USE_TSL = False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = "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"
+EMAIL_PORT = 587 #For TSL
+Email_USE_TSL = True
 
 
 #Celery Configurations
@@ -128,3 +129,5 @@ CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
+#sendgird recovery
+#ACQCU55ZQGPDNKSVVFHX6P5K

@@ -10,7 +10,7 @@ def send_feedback_email_task(email_address, username):
       'Welcome to Spectrum Diary: Mental Health Tracker', #subject
       f'Hi {username}! We are glad to see you taking steps to '+ 
       'improve your mental health.', #message
-      "support@example.com", #sender email
+      "jbraitsc@uccs.edu", #sender email
       [email_address], #recipient email
       fail_silently=False,
     )
