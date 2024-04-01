@@ -23,6 +23,19 @@
     background-color: #f0f0f0; /* Set the background color of the box */
     padding: 20px; /* Add padding for spacing */
     border-radius: 10px; /* Add rounded corners */
+    border: 2px solid black;
+  }
+
+  .quote-margin{
+    margin-bottom: 25px;
+  }
+
+  .quote-ref{
+    font-size: 10px;
+  }
+
+  .carousel .carousel-indicators li {
+    background-color: darkgray;
   }
 
 </style>
@@ -109,16 +122,7 @@
         <div class="container pt-4">
 </div>
 
-<div class="carousel slide" data-ride="carousel">
-  <!-- Indicators -->
-  <ul class="carousel-indicators">
-    {% for quote in quotes %}
-    <li data-target="#demo" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %} class="active"{% endif %}></li>
-    {% endfor %}
-  </ul>
-
-
-  <div class="carousel slide" data-ride="carousel">
+  <div class="carousel slide quote-margin" data-ride="carousel" data-interal=8000>
     <!-- Indicators -->
     <ul class="carousel-indicators">
       {% for quote in quotes %}
@@ -134,8 +138,8 @@
           <div class="row">
             <div class="col-md-8 offset-md-2">
               <div class="quote-box">
-                <p>{{ quote|safe }}</p>
-                <p class="api-reference">Quotes provided by: <a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a></p>
+                <h5>{{ quote|safe }}</h5>
+                <p class="api-reference quote-ref">Quotes provided by: <a href="https://zenquotes.io/" target="_blank">ZenQuotes API</a></p>
               </div>
             </div>
           </div>
