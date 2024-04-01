@@ -15,10 +15,11 @@ class SignupForm(UserCreationForm):
     ]
 
   def send_email(self):
-      send_feedback_email_task.delay(self.cleaned_data['email'], self.cleaned_data['username'])# type: ignore
+    send_feedback_email_task.delay(
+        self.cleaned_data['email'],
+        self.cleaned_data['username'])  # type: ignore
 
 
 class LoginForm(forms.Form):
   username = forms.CharField()
   password = forms.CharField(widget=forms.PasswordInput)
-

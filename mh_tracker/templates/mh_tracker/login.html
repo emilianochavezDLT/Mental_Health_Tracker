@@ -1,11 +1,14 @@
-{% extends "mh_tracker/base_template.html" %}
-
-{% block content %}
-<h1>Login</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-    <a href="{% url 'signup' %}">Dont have Account Create</a>
-</form>
-{% endblock %}
+{% extends "mh_tracker/base_template.html" %} {% block content %}
+<div class="content-wrapper">
+    <div class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+      <h1>Login</h1>
+      <form method="POST">
+        {% csrf_token %} {{ form.as_p }}
+        <a href="{% url 'home' %}">
+          <button type="submit">Login</button>
+        </a>    
+        <a href="{% url 'signup' %}">Don't have an Account?</a>
+      </form>
+    </div>
+  </div>
+  {% endblock %}

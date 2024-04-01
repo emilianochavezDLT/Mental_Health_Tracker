@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'mh_tracker',
     'bootstrap5',
     'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [

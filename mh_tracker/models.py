@@ -31,15 +31,18 @@ The article takes in a pdf file,title, and description.
 
 The video model takes in a video file, title, and description.
 '''
+
+
 class Article(models.Model):
   title = models.CharField(max_length=100)
   description = models.TextField()
   pdf = models.FileField(upload_to='resources/')
-  
+
+
 class Videos(models.Model):
   title = models.CharField(max_length=100)
   description = models.TextField()
-  video_link = models.URLField(blank=True, null=True) #For youtube videos
+  video_link = models.URLField(blank=True, null=True)  #For youtube videos
   video_file = models.FileField(upload_to='resources/', blank=True, null=True)
 
   #These are two helper methods to determine if a video is a link or file
@@ -51,7 +54,3 @@ class Videos(models.Model):
 
   def __str__(self):
     return f"Soberiety record for {self.user.username} on {self.date}"
-
-
-
-
