@@ -102,6 +102,7 @@ def color_calendar(request):
     return render(request, 'mh_tracker/color_calendar.html')
 
 
+@login_required
 def settings(request):
   if request.method == 'POST':
     #Redirect to the homepage
