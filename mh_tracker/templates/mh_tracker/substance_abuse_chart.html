@@ -1,111 +1,97 @@
 {% extends "mh_tracker/base_template.html" %} {% block content %}
 <div class="container">
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Substance Abuse Tracking Chart</title>
-    <script>
-      // Hardcoded positive quotes
-      const positiveQuotes = [
-        "Believe you can and you're halfway there.",
-        "Stay positive and happy. Work hard and don't give up hope.",
-        "The only limit to our realization of tomorrow will be our doubts of today.",
-        "Recovery is possible with determination and support.",
-        "Every day is a new beginning on the path to sobriety.",
-        "Believe in yourself and your ability to overcome addiction.",
-        "You are stronger than your cravings.",
-        "Sobriety is a gift you give yourself.",
-        "One step at a time, you can break free from substance abuse.",
-        "Your past does not define your future.",
-        "Choose recovery every day, one moment at a time.",
-        "You are worthy of a healthy and happy life without substances.",
-        "Courage is the first step towards recovery.",
-        "Stay positive and focused on your journey to sobriety.",
-        "Celebrate each day sober as a victory.",
-        "Seek support and surround yourself with positivity.",
-        "Change is possible, one decision at a time.",
-        "Your health and well-being are worth the effort to overcome addiction.",
-        "You have the strength within you to conquer substance abuse.",
-        "Recovery is a journey, not a destination.",
-        "Embrace sobriety as a new way of life.",
-        "Find joy in the moments of clarity and peace without substances.",
-        "Keep moving forward, even when the road is challenging.",
-        "Recovery is not a race, it's a journey. Enjoy the ride.",
-        "You are worth more than your struggles. Embrace your strength.",
-        "Sobriety opens the door to a life full of possibilities.",
-        "Breaking free from addiction is a courageous choice. You are brave.",
-        "Every sober day is a step towards a brighter future.",
-      ];
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Substance Abuse Tracking Chart</title>
+      <script>
+        // Hardcoded positive quotes
+        const positiveQuotes = [
+          "Believe you can and you're halfway there.",
+          "Stay positive and happy. Work hard and don't give up hope.",
+          "The only limit to our realization of tomorrow will be our doubts of today.",
+          "Recovery is possible with determination and support.",
+          "Every day is a new beginning on the path to sobriety.",
+          "Believe in yourself and your ability to overcome addiction.",
+          "You are stronger than your cravings.",
+          "Sobriety is a gift you give yourself.",
+          "One step at a time, you can break free from substance abuse.",
+          "Your past does not define your future.",
+          "Choose recovery every day, one moment at a time.",
+          "You are worthy of a healthy and happy life without substances.",
+          "Courage is the first step towards recovery.",
+          "Stay positive and focused on your journey to sobriety.",
+          "Celebrate each day sober as a victory.",
+          "Seek support and surround yourself with positivity.",
+          "Change is possible, one decision at a time.",
+          "Your health and well-being are worth the effort to overcome addiction.",
+          "You have the strength within you to conquer substance abuse.",
+          "Recovery is a journey, not a destination.",
+          "Embrace sobriety as a new way of life.",
+          "Find joy in the moments of clarity and peace without substances.",
+          "Keep moving forward, even when the road is challenging.",
+          "Recovery is not a race, it's a journey. Enjoy the ride.",
+          "You are worth more than your struggles. Embrace your strength.",
+          "Sobriety opens the door to a life full of possibilities.",
+          "Breaking free from addiction is a courageous choice. You are brave.",
+          "Every sober day is a step towards a brighter future.",
+        ];
 
-      // Randomly select a quote to display
-      const randomQuote =
-        positiveQuotes[Math.floor(Math.random() * positiveQuotes.length)];
+        // Randomly select a quote to display
+        const randomQuote =
+          positiveQuotes[Math.floor(Math.random() * positiveQuotes.length)];
 
-      document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("positive-quotes").innerText = randomQuote;
-      });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
-  <body>
-    <h1>Substance Abuse Tracking Chart</h1>
-    <div>
-      <h2 id="positive-quotes"></h2>
-    </div>
-    <canvas id="substanceAbuseChart" width="600" height="400"></canvas>
-    <script>
-      // Fetch the current month and year
-      const date = new Date();
-      const month = date.getMonth();
-      const year = date.getFullYear();
-      // Function to get days in current month
-      function getDaysInMonth(month, year) {
-        return new Date(year, month + 1, 0).getDate();
-      }
-      // Generate labels for the current month
-      const daysInMonth = getDaysInMonth(month, year);
-      const labels = [];
-      for (let day = 1; day <= daysInMonth; day++) {
-        labels.push(
-          `${year}-${("0" + (month + 1)).slice(-2)}-${("0" + day).slice(-2)}`,
-        );
-      }
-      const counters = Array(daysInMonth).fill(0);
-      const ctx = document
-        .getElementById("substanceAbuseChart")
-        .getContext("2d");
-      const substanceAbuseChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: "Counter",
-              data: counters,
-              fill: false,
-              borderColor: "rgb(75, 192, 192)",
-              tension: 0.1,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
+        document.addEventListener("DOMContentLoaded", function () {
+          document.getElementById("positive-quotes").innerText = randomQuote;
+        });
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+      <h1>Substance Abuse Tracking Chart</h1>
+      <div>
+        <h2 id="positive-quotes"></h2>
+      </div>
+      <canvas id="substanceAbuseChart" width="600" height="400"></canvas>
+      <script>
+        const dates = {{ dates|safe }}
+        const counters = {{ counters|safe }}
+
+        const ctx = document
+          .getElementById("substanceAbuseChart")
+          .getContext("2d");
+        const substanceAbuseChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: dates,
+            datasets: [
+              {
+                label: "Counter",
+                data: counters,
+                fill: false,
+                borderColor: "rgb(75, 192, 192)",
+                tension: 0.1,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
             },
           },
-        },
-      });
-    </script>
-    <form action="{% url 'increment_substance_use'  %}" method="post">
-      {% csrf_token %}
-      <button type="submit">+1</button>
-    </form>
-    <form action="{% url 'reset_substance_use'  %}" method="post">
-      {% csrf_token %}
-      <button type="submit">Reset</button>
-    </form>
-  </body>
-</html>
+        });
+      </script>
+      <form action="{% url 'increment_substance_use'  %}" method="post">
+        {% csrf_token %}
+        <button type="submit">+1</button>
+      </form>
+      <form action="{% url 'reset_substance_use'  %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Reset</button>
+      </form>
+    </body>
+  </html>
 </div>
 {% endblock %}
