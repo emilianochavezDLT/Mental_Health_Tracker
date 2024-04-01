@@ -61,7 +61,7 @@ def user_logout(request):
 
 
 #User can long in their journal entry
-@login_required
+#@login_required
 def journal_entry(request):
   if request.method == 'POST':
     journal_Entry = JournalEntry(user=request.user,
@@ -111,7 +111,7 @@ def settings(request):
     return render(request, 'mh_tracker/settings.html')
 
 
-@login_required
+#@login_required
 def analytics(request):
   if request.method == 'POST':
     #Redirect to the homepage
@@ -121,7 +121,7 @@ def analytics(request):
     return render(request, 'mh_tracker/analytics.html')
 
 
-@login_required
+#@login_required
 def substance_abuse_chart(request):
   user = request.user
   substance_data = SubstanceAbuseTracking.objects.filter(
@@ -139,7 +139,7 @@ def substance_abuse_chart(request):
   return render(request, 'mh_tracker/substance_abuse_chart.html', context)
 
 
-@login_required
+#@login_required
 def update_substance_use(request, action):
   if request.method == 'POST':
     today = now().date()
@@ -162,7 +162,7 @@ def update_substance_use(request, action):
     return HttpResponseRedirect(reverse('home'))
 
 
-@login_required
+#@login_required
 # View user progression
 def user_progression(request):
   '''
