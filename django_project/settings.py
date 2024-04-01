@@ -130,5 +130,4 @@ CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
 
-#sendgird recovery
-#ACQCU55ZQGPDNKSVVFHX6P5K
+
