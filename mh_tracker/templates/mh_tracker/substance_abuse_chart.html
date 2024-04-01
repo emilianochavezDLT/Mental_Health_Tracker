@@ -54,33 +54,54 @@
     </div>
     <canvas id="substanceAbuseChart" width="600" height="400"></canvas>
     <script>
-      const ctx = document.getElementById('substanceAbuseChart').getContext('2d');
+      // Fetch the current month and year
+      const date = new Date();
+      const month = date.getMonth();
+      const year = date.getFullYear();
+      // Function to get days in current month
+      function getDaysInMonth(month, year) {
+        return new Date(year, month + 1, 0).getDate();
+      }
+      // Generate labels for the current month
+      const daysInMonth = getDaysInMonth(month, year);
+      const labels = [];
+      for (let day = 1; day <= daysInMonth; day++) {
+        labels.push(
+          `${year}-${("0" + (month + 1)).slice(-2)}-${("0" + day).slice(-2)}`,
+        );
+      }
+      const counters = Array(daysInMonth).fill(0);
+      const ctx = document
+        .getElementById("substanceAbuseChart")
+        .getContext("2d");
       const substanceAbuseChart = new Chart(ctx, {
-        type: 'line',
+        type: "line",
         data: {
-          labels: {{ dates|safe }},
-          datasets: [{
-            label: 'Counter',
-            data: {{ counters|safe }},
-            fill: false,
-            borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          }]
+          labels: labels,
+          datasets: [
+            {
+              label: "Counter",
+              data: counters,
+              fill: false,
+              borderColor: "rgb(75, 192, 192)",
+              tension: 0.1,
+            },
+          ],
         },
         options: {
           scales: {
             y: {
-              beginAtZero: true
-            }
-          }
-        }
+              beginAtZero: true,
+            },
+          },
+        },
       });
     </script>
-    <form action="{% url 'increment_substance_use' %}" method="post">
+    <form action="{% url 'increment_substance_use'  %}" method="post">
       {% csrf_token %}
       <button type="submit">+1</button>
     </form>
-    <form action="{% url 'reset_substance_use' %}" method="post">
+    <form action="{% url 'reset_substance_use'  %}" method="post">
       {% csrf_token %}
       <button type="submit">Reset</button>
     </form>

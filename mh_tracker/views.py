@@ -150,8 +150,7 @@ def update_substance_use(request, action):
         defaults={
             'days_sober': 0,
             'counter': 0
-        }  # defaults are used if a new entry is created
-    )
+        })
     if action == 'increment':
       entry.counter += 1
       entry.save()
