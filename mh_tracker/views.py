@@ -166,12 +166,7 @@ def update_substance_use(request, action):
   if request.method == 'POST':
     today = now().date()
     entry, created = SubstanceAbuseTracking.objects.get_or_create(
-        user=request.user,
-        date=today,
-        defaults={
-            'days_sober': 0,
-            'counter': 0
-        })
+        user=request.user, date=today, defaults={'counters': 0})
     if action == 'increment':
       entry.counter += 1
       entry.save()
