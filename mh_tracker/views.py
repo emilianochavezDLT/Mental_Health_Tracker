@@ -166,7 +166,7 @@ def update_substance_use(request, action):
   if request.method == 'POST':
     today = now().date()
     entry, created = SubstanceAbuseTracking.objects.get_or_create(
-        user=request.user, date=today, defaults={'counters': 0})
+        user=request.user, date=today, defaults={'counter': 0})
     if action == 'increment':
       entry.counter += 1
       entry.save()
@@ -289,6 +289,7 @@ def reports(request):
 
   return render(request, 'mh_tracker/reports.html', context)
 
+
 # Add a therapist for the user to have
 def add_therapist(request):
   if request.method == 'POST':
@@ -298,8 +299,10 @@ def add_therapist(request):
       return redirect('home')
   else:
     therapist = TherapistForm()
-    return render(request, 'mh_tracker/add_therapist.html', {'therapist': therapist})
-  
+    return render(request, 'mh_tracker/add_therapist.html',
+                  {'therapist': therapist})
+
+
 # View all therapists
 #I might have to put all of this into the settings view!!
 def view_therapists(request):
@@ -307,8 +310,5 @@ def view_therapists(request):
   if therapists:
     return render(request, 'mh_tracker/settings.html', {'therapists': None})
   else:
-    return render(request, 'mh_tracker/settings.html', {'therapists': therapists})
-
-  
-
-  
+    return render(request, 'mh_tracker/settings.html',
+                  {'therapists': therapists})
