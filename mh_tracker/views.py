@@ -242,12 +242,62 @@ def reports(request):
   data = JournalEntry.objects.filter(user=request.user, date_created__gte=d)
 
   #Gathers the mood data and adds it to the context dictionary
+
+  #Sleep, Exercise, Diet, Water, Journal
+  stats = [0, 0, 0, 0, 0]
+  inputNames = ['sleepAvg', 'exerciseAvg', 'dietAvg', 'waterAvg', 'journalAvg']
+
+  #Advanced negative stats
   temp_data = data.filter(mood_level__lte=2)
   context.update({"mood_negative": temp_data.count()})
+
+  for item in temp_data:
+    stats[0] += item.sleep_quality
+    stats[1] += item.exercise_time
+    stats[2] += item.diet_quality
+    stats[3] += item.water_intake
+    if item.journal_text != "":
+      stats[4] += 1
+
+  for i in range(0, len(stats)):
+    if temp_data.count() == 0:
+      break
+    if i == 4:
+      temp = 'Did' if stats[4] >= 0.5 else 'Did not'
+      context.update({inputNames[i] + '_negative': temp})
+    else:
+      stats[i] /= temp_data.count()
+      stats[i] = round(stats[i], 2)
+      context.update({inputNames[i] + '_negative': stats[i]})
+
+  #Neutral Stats
   temp_data = data.filter(mood_level=3)
   context.update({"mood_neutral": temp_data.count()})
+
+  #Advanced positive stats
   temp_data = data.filter(mood_level__gte=4)
   context.update({"mood_positive": temp_data.count()})
+
+  stats = [0, 0, 0, 0, 0]
+
+  for item in temp_data:
+    stats[0] += item.sleep_quality
+    stats[1] += item.exercise_time
+    stats[2] += item.diet_quality
+    stats[3] += item.water_intake
+    if item.journal_text != "":
+      stats[4] += 1
+
+  for i in range(0, len(stats)):
+    if temp_data.count() == 0:
+      break
+    if i == 4:
+      temp = 'Did' if stats[4] >= 0.5 else 'Did not'
+      context.update({inputNames[i] + '_positive': temp})
+    else:
+      stats[i] /= temp_data.count()
+      stats[i] = round(stats[i], 2)
+      context.update({inputNames[i] + '_positive': stats[i]})
 
   #Gathers the sleep data and adds it to the context dictionary
   temp_data = data.filter(sleep_quality__lte=2)

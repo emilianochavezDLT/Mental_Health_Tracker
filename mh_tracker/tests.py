@@ -31,9 +31,15 @@ class ModelsTestCase(TestCase):
     self.video = Videos.objects.create(title="Test Video",
                                        description="A test video.",
                                        video_link="https://example.com")
-    
-    self.therapist = Therapist.objects.create(user = self.user, first_name = "John", last_name = "Doe", email = "jd@mail.com",  company = "Therapy Inc.", phone_number = "123-456-7890",)
 
+    self.therapist = Therapist.objects.create(
+        user=self.user,
+        first_name="John",
+        last_name="Doe",
+        email="jd@mail.com",
+        company="Therapy Inc.",
+        phone_number="123-456-7890",
+    )
 
   def test_journal_entry_creation(self):
     self.assertEqual(self.journal_entry.mood_level, 5)
@@ -135,12 +141,22 @@ def test_reports(self):
   response = self.client.post(reverse('reports'), request)
 
   result = {
-      "mood_negative": 1,
+      "mood_negative": 0,
+      "sleepAvg_negative": 0,
+      "exerciseAvg_negative": 0,
+      "dietAvg_negative": 0,
+      "waterAvg_negative": 0,
+      "journalAvg_negative": 0,
       "mood_neutral": 0,
-      "mood_positive": 0,
-      "sleep_negative": 1,
+      "mood_positive": 1,
+      "sleepAvg_positive": 4,
+      "exerciseAvg_positive": 3,
+      "dietAvg_positive": 2,
+      "waterAvg_positive": 1,
+      "journalAvg_positive": "Did",
+      "sleep_negative": 0,
       "sleep_neutral": 0,
-      "sleep_positive": 0,
+      "sleep_positive": 1,
       "exercise_negative": 0,
       "exercise_neutral": 1,
       "exercise_positive": 0,
