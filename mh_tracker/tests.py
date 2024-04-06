@@ -132,9 +132,9 @@ def test_reports(self):
       'date_created': datetime.today(),
       'mood_level': 5,
       'sleep_quality': 4,
-      'exercise_time': 3,
+      'exercise_time': 60,
       'diet_quality': 2,
-      'water_intake': 1,
+      'water_intake': 7,
       'journal_text': 'Test entry'
   }
 
@@ -158,13 +158,11 @@ def test_reports(self):
       "sleep_neutral": 0,
       "sleep_positive": 1,
       "exercise_negative": 0,
-      "exercise_neutral": 1,
-      "exercise_positive": 0,
+      "exercise_positive": 1,
       "diet_negative": 1,
       "diet_neutral": 0,
       "diet_positive": 0,
       "water_negative": 1,
-      "water_neutral": 0,
       "water_positive": 0,
       "journal_entries_negative": 0,
       "journal_entries_positive": 1

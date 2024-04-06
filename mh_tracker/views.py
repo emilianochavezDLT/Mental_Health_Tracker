@@ -263,7 +263,7 @@ def reports(request):
     if temp_data.count() == 0:
       break
     if i == 4:
-      temp = 'Did' if stats[4] >= 0.5 else 'Did not'
+      temp = '' if stats[4] >= 0.5 else 'not'
       context.update({inputNames[i] + '_negative': temp})
     else:
       stats[i] /= temp_data.count()
@@ -292,7 +292,7 @@ def reports(request):
     if temp_data.count() == 0:
       break
     if i == 4:
-      temp = 'Did' if stats[4] >= 0.5 else 'Did not'
+      temp = '' if stats[4] >= 0.5 else 'not'
       context.update({inputNames[i] + '_positive': temp})
     else:
       stats[i] /= temp_data.count()
@@ -308,11 +308,9 @@ def reports(request):
   context.update({"sleep_positive": temp_data.count()})
 
   #Gathers the exercise data and adds it to the context dictionary
-  temp_data = data.filter(exercise_time__lte=2)
+  temp_data = data.filter(exercise_time__lte=59)
   context.update({"exercise_negative": temp_data.count()})
-  temp_data = data.filter(exercise_time=3)
-  context.update({"exercise_neutral": temp_data.count()})
-  temp_data = data.filter(exercise_time__gte=4)
+  temp_data = data.filter(exercise_time__gte=60)
   context.update({"exercise_positive": temp_data.count()})
 
   #Gathers the diet data and adds it to the context dictionary
@@ -324,11 +322,9 @@ def reports(request):
   context.update({"diet_positive": temp_data.count()})
 
   #Gathers the water data and adds it to the context dictionary
-  temp_data = data.filter(water_intake__lte=2)
+  temp_data = data.filter(water_intake__lte=7)
   context.update({"water_negative": temp_data.count()})
-  temp_data = data.filter(water_intake=3)
-  context.update({"water_neutral": temp_data.count()})
-  temp_data = data.filter(water_intake__gte=4)
+  temp_data = data.filter(water_intake__gte=8)
   context.update({"water_positive": temp_data.count()})
 
   #Gathers the journal entry data and adds it to the context dictionary

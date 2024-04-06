@@ -31,7 +31,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 -20px;
   }
 
   .container-cards {
@@ -59,10 +58,14 @@
   }
 </style>
 
+<!-- Wrapper for containers -->
 <div class="container-wrapper">
+  <!-- Container for the cards to do with general stats -->
   <div class="container">
     <h2>Monthly Report</h2>
+    <!-- Container to have two cards per row -->
     <div class="container-cards">
+      <!-- Card for Mood stats -->
       <div class="card" style="width: 18rem">
         <div id="card_bg" class="card-body">
           <h5 class="card-title text-warning">Mood</h5>
@@ -73,6 +76,7 @@
           </p>
         </div>
       </div>
+      <!-- Card for Sleep stats -->
       <div class="card" style="width: 18rem">
         <div id="card_bg" class="card-body">
           <h5 class="card-title text-warning">Sleep</h5>
@@ -85,16 +89,18 @@
       </div>
     </div>
     <div class="container-cards">
+      <!-- Card for Exercise stats -->
       <div class="card" style="width: 18rem">
         <div id="card_bg" class="card-body">
           <h5 class="card-title text-warning">Exercise</h5>
           <p id="exercise" class="card-text text-warning">
             You had {{ exercise_negative }} days with minimal exercise.<br />
-            You had {{ exercise_neutral }} days with medium exercise.<br />
-            You had {{ exercise_positive }} days with a lot of exercise.
+            You had {{ exercise_positive }} days with a lot of exercise.<br />
+            <br />
           </p>
         </div>
       </div>
+      <!-- Card for Diet stats -->
       <div class="card" style="width: 18rem">
         <div id="card_bg" class="card-body">
           <h5 class="card-title text-warning">Diet</h5>
@@ -107,16 +113,18 @@
       </div>
     </div>
     <div class="container-cards">
+      <!-- Card for Water stats -->
       <div class="card" style="width: 18rem">
         <div id="card_bg" class="card-body">
           <h5 class="card-title text-warning">Water Intake</h5>
           <p id="water" class="card-text text-warning">
             You had a low amount of water on {{ water_negative }} days.<br />
-            You had a medium amount of water on {{ water_neutral }} days.<br />
-            You had a large amount of water on {{ water_positive }} days.
+            You had a large amount of water on {{ water_positive }} days.<br />
+            <br />
           </p>
         </div>
       </div>
+      <!-- Card for Journal stats -->
       <div class="card" style="width: 18rem">
         <div id="card_bg" class="card-body">
           <h5 class="card-title text-warning">Journal Entries</h5>
@@ -130,35 +138,38 @@
       </div>
     </div>
   </div>
+  <!-- Container for the more advanced stats -->
   <div class="container">
     <h2>Positive and Negative Days</h2>
     <div class="container-cards">
+      <!-- Positive Day averages Card -->
       <div class="card" style="width: 18rem">
         <div id="card_bg" class="card-body">
           <h5 class="card-title text-warning">Positive Days</h5>
           <div id="stats" class="card-text text-warning">
             On Positive Days you usually had:<br />
             <ul class="list-group text-warning">
-              <li>Energy from Sleep: {{ sleepAvg_positive }}</li>
+              <li>Energy from Sleep (1-5): {{ sleepAvg_positive }}</li>
               <li>Minutes of Exercise: {{ exerciseAvg_positive }}</li>
-              <li>Quality of Diet: {{ dietAvg_positive }}</li>
-              <li>Water Intake: {{ waterAvg_positive }}</li>
-              <li>{{ journalAvg_positive }} fill out a Journal Entry</li>
+              <li>Quality of Diet (1-5): {{ dietAvg_positive }}</li>
+              <li>Cups of Water: {{ waterAvg_positive }}</li>
+              <li>Did {{ journalAvg_positive }} fill out a Journal Entry</li>
             </ul>
           </div>
         </div>
       </div>
+      <!-- Negative Day averages Card -->
       <div class="card" style="width: 18rem">
         <div id="card_bg" class="card-body">
           <h5 class="card-title text-warning">Negative Days</h5>
           <div id="stats" class="card-text text-warning">
             On Negative Days you usually had:<br />
             <ul class="list-group text-warning">
-              <li>Energy from Sleep: {{ sleepAvg_negative }}</li>
+              <li>Energy from Sleep (1-5): {{ sleepAvg_negative }}</li>
               <li>Minutes of Exercise: {{ exerciseAvg_negative }}</li>
-              <li>Quality of Diet: {{ dietAvg_negative }}</li>
-              <li>Water Intake: {{ waterAvg_negative }}</li>
-              <li>{{ journalAvg_negative }} fill out a Journal Entry</li>
+              <li>Quality of Diet (1-5): {{ dietAvg_negative }}</li>
+              <li>Cups of Water: {{ waterAvg_negative }}</li>
+              <li>Did {{ journalAvg_negative }} fill out a Journal Entry</li>
             </ul>
           </div>
         </div>
