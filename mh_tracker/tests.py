@@ -125,47 +125,121 @@ class ReportsTestCase(TestCase):
     self.user = User.objects.create_user(username='testuser', password='12345')
     self.client.login(username='testuser', password='12345')
 
+  def test_report_single_positive(self):
+    self.journal_entry = JournalEntry.objects.create(user=self.user,
+                                                     mood_level=5,
+                                                     sleep_quality=4,
+                                                     exercise_time=60,
+                                                     diet_quality=2,
+                                                     water_intake=7,
+                                                     journal_text="Test entry")
 
-def test_reports(self):
-  request = {
-      'user': self.user,
-      'date_created': datetime.today(),
-      'mood_level': 5,
-      'sleep_quality': 4,
-      'exercise_time': 60,
-      'diet_quality': 2,
-      'water_intake': 7,
-      'journal_text': 'Test entry'
-  }
+    response = self.client.get(reverse('reports'), '')
 
-  response = self.client.post(reverse('reports'), request)
+    self.assertEqual(response.context['mood_negative'], 0)
+    self.assertEqual(response.context['sleepAvg_negative'], 0)
+    self.assertEqual(response.context['exerciseAvg_negative'], 0)
+    self.assertEqual(response.context['dietAvg_negative'], 0)
+    self.assertEqual(response.context['waterAvg_negative'], 0)
+    self.assertEqual(response.context['journalAvg_negative'], 'not')
+    self.assertEqual(response.context['mood_neutral'], 0)
+    self.assertEqual(response.context['mood_positive'], 1)
+    self.assertEqual(response.context['sleepAvg_positive'], 4)
+    self.assertEqual(response.context['exerciseAvg_positive'], 60)
+    self.assertEqual(response.context['dietAvg_positive'], 2)
+    self.assertEqual(response.context['waterAvg_positive'], 7)
+    self.assertEqual(response.context['journalAvg_positive'], '')
+    self.assertEqual(response.context['sleep_negative'], 0)
+    self.assertEqual(response.context['sleep_neutral'], 0)
+    self.assertEqual(response.context['sleep_positive'], 1)
+    self.assertEqual(response.context['exercise_negative'], 0)
+    self.assertEqual(response.context['exercise_positive'], 1)
+    self.assertEqual(response.context['diet_negative'], 1)
+    self.assertEqual(response.context['diet_neutral'], 0)
+    self.assertEqual(response.context['diet_positive'], 0)
+    self.assertEqual(response.context['water_negative'], 1)
+    self.assertEqual(response.context['water_positive'], 0)
+    self.assertEqual(response.context['journal_entries_negative'], 0)
+    self.assertEqual(response.context['journal_entries_positive'], 1)
 
-  result = {
-      "mood_negative": 0,
-      "sleepAvg_negative": 0,
-      "exerciseAvg_negative": 0,
-      "dietAvg_negative": 0,
-      "waterAvg_negative": 0,
-      "journalAvg_negative": 0,
-      "mood_neutral": 0,
-      "mood_positive": 1,
-      "sleepAvg_positive": 4,
-      "exerciseAvg_positive": 3,
-      "dietAvg_positive": 2,
-      "waterAvg_positive": 1,
-      "journalAvg_positive": "Did",
-      "sleep_negative": 0,
-      "sleep_neutral": 0,
-      "sleep_positive": 1,
-      "exercise_negative": 0,
-      "exercise_positive": 1,
-      "diet_negative": 1,
-      "diet_neutral": 0,
-      "diet_positive": 0,
-      "water_negative": 1,
-      "water_positive": 0,
-      "journal_entries_negative": 0,
-      "journal_entries_positive": 1
-  }
+  def test_report_single_negative(self):
+    self.journal_entry = JournalEntry.objects.create(user=self.user,
+                                                     mood_level=2,
+                                                     sleep_quality=2,
+                                                     exercise_time=45,
+                                                     diet_quality=4,
+                                                     water_intake=10,
+                                                     journal_text="")
 
-  self.assertEqual(response.context == result)
+    response = self.client.get(reverse('reports'), '')
+
+    self.assertEqual(response.context['mood_negative'], 1)
+    self.assertEqual(response.context['sleepAvg_negative'], 2)
+    self.assertEqual(response.context['exerciseAvg_negative'], 45)
+    self.assertEqual(response.context['dietAvg_negative'], 4)
+    self.assertEqual(response.context['waterAvg_negative'], 10)
+    self.assertEqual(response.context['journalAvg_negative'], 'not')
+    self.assertEqual(response.context['mood_neutral'], 0)
+    self.assertEqual(response.context['mood_positive'], 0)
+    self.assertEqual(response.context['sleepAvg_positive'], 0)
+    self.assertEqual(response.context['exerciseAvg_positive'], 0)
+    self.assertEqual(response.context['dietAvg_positive'], 0)
+    self.assertEqual(response.context['waterAvg_positive'], 0)
+    self.assertEqual(response.context['journalAvg_positive'], 'not')
+    self.assertEqual(response.context['sleep_negative'], 1)
+    self.assertEqual(response.context['sleep_neutral'], 0)
+    self.assertEqual(response.context['sleep_positive'], 0)
+    self.assertEqual(response.context['exercise_negative'], 1)
+    self.assertEqual(response.context['exercise_positive'], 0)
+    self.assertEqual(response.context['diet_negative'], 0)
+    self.assertEqual(response.context['diet_neutral'], 0)
+    self.assertEqual(response.context['diet_positive'], 1)
+    self.assertEqual(response.context['water_negative'], 0)
+    self.assertEqual(response.context['water_positive'], 1)
+    self.assertEqual(response.context['journal_entries_negative'], 1)
+    self.assertEqual(response.context['journal_entries_positive'], 0)
+
+  def test_report_double(self):
+    self.journal_entry = JournalEntry.objects.create(user=self.user,
+                                                     mood_level=1,
+                                                     sleep_quality=2,
+                                                     exercise_time=30,
+                                                     diet_quality=2,
+                                                     water_intake=3,
+                                                     journal_text="")
+
+    self.journal_entry = JournalEntry.objects.create(user=self.user,
+                                                     mood_level=5,
+                                                     sleep_quality=4,
+                                                     exercise_time=60,
+                                                     diet_quality=4,
+                                                     water_intake=10,
+                                                     journal_text="Test")
+
+    response = self.client.get(reverse('reports'), '')
+
+    self.assertEqual(response.context['mood_negative'], 1)
+    self.assertEqual(response.context['sleepAvg_negative'], 2)
+    self.assertEqual(response.context['exerciseAvg_negative'], 30)
+    self.assertEqual(response.context['dietAvg_negative'], 2)
+    self.assertEqual(response.context['waterAvg_negative'], 3)
+    self.assertEqual(response.context['journalAvg_negative'], 'not')
+    self.assertEqual(response.context['mood_neutral'], 0)
+    self.assertEqual(response.context['mood_positive'], 1)
+    self.assertEqual(response.context['sleepAvg_positive'], 4)
+    self.assertEqual(response.context['exerciseAvg_positive'], 60)
+    self.assertEqual(response.context['dietAvg_positive'], 4)
+    self.assertEqual(response.context['waterAvg_positive'], 10)
+    self.assertEqual(response.context['journalAvg_positive'], '')
+    self.assertEqual(response.context['sleep_negative'], 1)
+    self.assertEqual(response.context['sleep_neutral'], 0)
+    self.assertEqual(response.context['sleep_positive'], 1)
+    self.assertEqual(response.context['exercise_negative'], 1)
+    self.assertEqual(response.context['exercise_positive'], 1)
+    self.assertEqual(response.context['diet_negative'], 1)
+    self.assertEqual(response.context['diet_neutral'], 0)
+    self.assertEqual(response.context['diet_positive'], 1)
+    self.assertEqual(response.context['water_negative'], 1)
+    self.assertEqual(response.context['water_positive'], 1)
+    self.assertEqual(response.context['journal_entries_negative'], 1)
+    self.assertEqual(response.context['journal_entries_positive'], 1)

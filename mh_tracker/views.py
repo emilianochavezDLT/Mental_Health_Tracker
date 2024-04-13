@@ -261,8 +261,11 @@ def reports(request):
 
   for i in range(0, len(stats)):
     if temp_data.count() == 0:
-      break
-    if i == 4:
+      if i != 4:
+        context.update({inputNames[i] + '_negative': 0})
+      else:
+        context.update({inputNames[i] + '_negative': 'not'})
+    elif i == 4:
       temp = '' if stats[4] >= 0.5 else 'not'
       context.update({inputNames[i] + '_negative': temp})
     else:
@@ -290,8 +293,11 @@ def reports(request):
 
   for i in range(0, len(stats)):
     if temp_data.count() == 0:
-      break
-    if i == 4:
+      if i != 4:
+        context.update({inputNames[i] + '_positive': 0})
+      else:
+        context.update({inputNames[i] + '_positive': 'not'})
+    elif i == 4:
       temp = '' if stats[4] >= 0.5 else 'not'
       context.update({inputNames[i] + '_positive': temp})
     else:
