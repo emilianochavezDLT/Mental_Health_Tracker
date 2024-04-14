@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import JournalEntry, SubstanceAbuseTracking, Article, Videos, Therapist
 from datetime import datetime
+from django.core import mail
 
 
 class ModelsTestCase(TestCase):
@@ -98,11 +99,12 @@ class URLAccessTestCase(TestCase):
 class JournalEntryTestCase(TestCase):
 
   def setUp(self):
-
+    #Create a User
     self.user = User.objects.create_user(username='testuser', password='12345')
     self.client.login(username='testuser', password='12345')
 
   def test_journal_entry(self):
+    #Information the sent back from the form
     request = {
         'user': self.user,
         'date_created': datetime.today(),
@@ -114,6 +116,8 @@ class JournalEntryTestCase(TestCase):
         'journal_text': 'Test entry'
     }
 
+    #Assert that when this information is sent back from the form
+    #A journal entry is saved
     self.client.post(reverse('journal_entry'), request)
     self.assertTrue(JournalEntry.objects.filter(user=self.user).exists())
 
@@ -121,11 +125,12 @@ class JournalEntryTestCase(TestCase):
 class ReportsTestCase(TestCase):
 
   def setUp(self):
-
+    #Creates a User
     self.user = User.objects.create_user(username='testuser', password='12345')
     self.client.login(username='testuser', password='12345')
 
   def test_report_single_positive(self):
+    #Creates a positive Journal Entry
     self.journal_entry = JournalEntry.objects.create(user=self.user,
                                                      mood_level=5,
                                                      sleep_quality=4,
@@ -134,8 +139,10 @@ class ReportsTestCase(TestCase):
                                                      water_intake=7,
                                                      journal_text="Test entry")
 
-    response = self.client.get(reverse('reports'), '')
+    #Gather the response of the Template after calling the Template
+    response = self.clie
 
+    #Assert the values in context are sent in correctly to calc stats
     self.assertEqual(response.context['mood_negative'], 0)
     self.assertEqual(response.context['sleepAvg_negative'], 0)
     self.assertEqual(response.context['exerciseAvg_negative'], 0)
@@ -163,6 +170,7 @@ class ReportsTestCase(TestCase):
     self.assertEqual(response.context['journal_entries_positive'], 1)
 
   def test_report_single_negative(self):
+    #Creates a negative Journal Entry
     self.journal_entry = JournalEntry.objects.create(user=self.user,
                                                      mood_level=2,
                                                      sleep_quality=2,
@@ -171,8 +179,10 @@ class ReportsTestCase(TestCase):
                                                      water_intake=10,
                                                      journal_text="")
 
+    #Gather the response of the Template after calling the Template
     response = self.client.get(reverse('reports'), '')
 
+    #Assert the values in context are sent in correctly to calc stats
     self.assertEqual(response.context['mood_negative'], 1)
     self.assertEqual(response.context['sleepAvg_negative'], 2)
     self.assertEqual(response.context['exerciseAvg_negative'], 45)
@@ -200,6 +210,7 @@ class ReportsTestCase(TestCase):
     self.assertEqual(response.context['journal_entries_positive'], 0)
 
   def test_report_double(self):
+    #Creates two objects one negative and one positive
     self.journal_entry = JournalEntry.objects.create(user=self.user,
                                                      mood_level=1,
                                                      sleep_quality=2,
@@ -216,8 +227,10 @@ class ReportsTestCase(TestCase):
                                                      water_intake=10,
                                                      journal_text="Test")
 
+    #Gather the response of the Template after calling the Template
     response = self.client.get(reverse('reports'), '')
 
+    #Assert the values in context are sent in correctly to calc stats
     self.assertEqual(response.context['mood_negative'], 1)
     self.assertEqual(response.context['sleepAvg_negative'], 2)
     self.assertEqual(response.context['exerciseAvg_negative'], 30)
@@ -243,3 +256,56 @@ class ReportsTestCase(TestCase):
     self.assertEqual(response.context['water_positive'], 1)
     self.assertEqual(response.context['journal_entries_negative'], 1)
     self.assertEqual(response.context['journal_entries_positive'], 1)
+
+  def test_report_no_entries(self):
+    #Creates no objects for the reports to draw from
+
+    #Gathers the response from the GET
+    response = self.client.get(reverse('reports'), '')
+
+    #Asserts that the values in context are sent in correctly to calc stats
+    self.assertEqual(response.context['mood_negative'], 0)
+    self.assertEqual(response.context['sleepAvg_negative'], 0)
+    self.assertEqual(response.context['exerciseAvg_negative'], 0)
+    self.assertEqual(response.context['dietAvg_negative'], 0)
+    self.assertEqual(response.context['waterAvg_negative'], 0)
+    self.assertEqual(response.context['journalAvg_negative'], 'not')
+    self.assertEqual(response.context['mood_neutral'], 0)
+    self.assertEqual(response.context['mood_positive'], 0)
+    self.assertEqual(response.context['sleepAvg_positive'], 0)
+    self.assertEqual(response.context['exerciseAvg_positive'], 0)
+    self.assertEqual(response.context['dietAvg_positive'], 0)
+    self.assertEqual(response.context['waterAvg_positive'], 0)
+    self.assertEqual(response.context['journalAvg_positive'], 'not')
+    self.assertEqual(response.context['sleep_negative'], 0)
+    self.assertEqual(response.context['sleep_neutral'], 0)
+    self.assertEqual(response.context['sleep_positive'], 0)
+    self.assertEqual(response.context['exercise_negative'], 0)
+    self.assertEqual(response.context['exercise_positive'], 0)
+    self.assertEqual(response.context['diet_negative'], 0)
+    self.assertEqual(response.context['diet_neutral'], 0)
+    self.assertEqual(response.context['diet_positive'], 0)
+    self.assertEqual(response.context['water_negative'], 0)
+    self.assertEqual(response.context['water_positive'], 0)
+    self.assertEqual(response.context['journal_entries_negative'], 0)
+    self.assertEqual(response.context['journal_entries_positive'], 0)
+
+  def test_email_user(self):
+    #Informatio necessary to send an email
+    request = {
+        "Subject": "Test",
+        "Message": "Test",
+        "From": "mhtrackeruccs@gmail.com"
+    }
+
+    #POST for the send email functionality
+    self.client.post(reverse('send_email_self'), request)
+
+    #Assert that an email was sent
+    self.assertEqual(len(mail.outbox), 1)
+
+    #Assert that the contents and sender of the email are correct
+    email = mail.outbox[0]
+    self.assertEqual(email.subject, request['Subject'])
+    self.assertEqual(email.body, request['Message'])
+    self.assertEqual(email.from_email, request['From'])

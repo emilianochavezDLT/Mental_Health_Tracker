@@ -120,14 +120,19 @@ SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ['SEND_GRID']
-EMAIL_PORT = 587 #For TSL
+EMAIL_PORT = 587  #For TSL
 Email_USE_TSL = True
 
+#Email for sending Reports
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'mhtrackeruccs@gmail.com'
+EMAIL_HOST_PASSWORD = 'SV#^4N@7ZHffKh'
+EMAIL_USE_TLS = True
 
 #Celery Configurations
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
-
-

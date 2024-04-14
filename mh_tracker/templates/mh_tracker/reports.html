@@ -18,15 +18,52 @@
     vertical-align: middle;
   }
 
+  /*Help from w3schools for Modal setup*/
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: index; 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
   .container-wrapper {
     justify-content: center;
     align-items: flex-start;
     text-align: center;
     display: flex;
+    flex-wrap: wrap;
   }
 
   .container {
-    width: calc(50% - 10px);
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -63,6 +100,14 @@
   <!-- Container for the cards to do with general stats -->
   <div class="container">
     <h2>Monthly Report</h2>
+    <!-- Email yourself the report -->
+    <button id="modalButton">Generate Report</button>
+    <div id="reportModal" class="modal">
+      <div class="modal-content">
+        <p>Your report has been sent to your email!</p>
+        <span class="close">&times;</span>
+      </div>
+    </div>
     <!-- Container to have two cards per row -->
     <div class="container-cards">
       <!-- Card for Mood stats -->
@@ -177,5 +222,48 @@
     </div>
   </div>
 </div>
+
+<script>
+  //Help from w3schools for Modal functionality
+  var modal = document.getElementById("reportModal");
+  var btn = document.getElementById("modalButton");
+  var span = document.getElementsByClassName("close")[0];
+
+  btn.onclick = function () {
+    //NEED TO ADD FUNCTIONALITY FOR SENDING EMAIL EITHER USING POST
+    //OR INSIDE THE JS
+    var mail = {
+      Subject: "Monthly Mental Health Tracker Report",
+      Message:
+        "For the past 31 days, you have had ${mood_positive} positive days and ${mood_negative} negative days.",
+      From: "mhtrackeruccs@gmail.com",
+    };
+    var XHR = new XMLHttpRequest();
+    XHR.open("POST", "{% url 'send_email_self'}", true);
+    XHR.setRequestHeader("Content-Type", "application/json");
+    XHR.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        modal.text = "Email sent successfully!";
+        //alert("Email sent successfully!");
+      } else {
+        modal.text = "Error sending email!";
+      }
+    };
+    XHR.send(JSON.stringify({ mail }));
+
+    //Displays modal
+    modal.style.display = "block";
+  };
+
+  span.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+</script>
 
 {% endblock %}
