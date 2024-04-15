@@ -223,7 +223,10 @@ def userPage(request, user_id):
   context = {'form': form, 'app_user': app_user, 'profile': profile}
   return render(request, 'mh_tracker/user_form.html', context)
 '''
-
+def calendar_data(request):
+  journal_entries = JournalEntry.objects.filter(
+    user=request.user).order_by('date_created')
+  
 
 def rescourcesPage(request):
   videos = Videos.objects.all()
