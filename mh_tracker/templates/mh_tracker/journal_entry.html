@@ -14,6 +14,11 @@ incorporates models. -->
     clear: none;
   }
 
+  .container-sliders {
+    display: flex;
+    flex-direction: column;
+  }
+
   label {
     float: left;
     clear: none;
@@ -38,7 +43,6 @@ incorporates models. -->
     your personal growth and reflection. Feel free to come by anytime! You
     matter!
   </p>
-
   <!-- Journal Entry Form -->
   <form id="myForm" method="post">
     {% csrf_token %}
@@ -81,45 +85,6 @@ incorporates models. -->
           <label for="sleep_five">5</label>
         </div>
       </fieldset>
-      <!-- Exercise Rating -->
-      <label for="journalDescription" class="form-label"
-        >Exercise Time (in minutes):
-      </label>
-      <!-- Radio Button Area -->
-      <fieldset>
-        <div class="some-class">
-          <input type="radio" id="exercise_0" name="exercise_time" value="0" />
-          <label for="exercise_0">0</label>
-          <input
-            type="radio"
-            id="exercise_15"
-            name="exercise_time"
-            value="15"
-          />
-          <label for="exercise_15">15</label>
-          <input
-            type="radio"
-            id="exercise_30"
-            name="exercise_time"
-            value="30"
-          />
-          <label for="exercise_30">30</label>
-          <input
-            type="radio"
-            id="exercise_45"
-            name="exercise_time"
-            value="45"
-          />
-          <label for="exercise_45">45</label>
-          <input
-            type="radio"
-            id="exercise_60"
-            name="exercise_time"
-            value="60"
-          />
-          <label for="exercise_60">60</label>
-        </div>
-      </fieldset>
       <!-- Diet Rating -->
       <label for="journalDescription" class="form-label"
         >How Healthy Was Your Diet (Over Processed(1) - Very Healthy(5)):
@@ -140,27 +105,54 @@ incorporates models. -->
         </div>
       </fieldset>
       <!-- Water Rating -->
-      <label for="journalDescription" class="form-label"
-        >Water Intake (Under 8oz(1) - About 32oz(3) - 64oz(5)):
-      </label>
-      <!-- Radio Button Area -->
-      <fieldset>
-        <div class="some-class">
-          <input type="radio" id="water_one" name="water_intake" value="1" />
-          <label for="water_one">1</label>
-          <input type="radio" id="water_two" name="water_intake" value="2" />
-          <label for="water_two">2</label>
-          <input type="radio" id="water_three" name="water_intake" value="3" />
-          <label for="water_three">3</label>
-          <input type="radio" id="water_four" name="water_intake" value="4" />
-          <label for="water_four">4</label>
-          <input type="radio" id="water_five" name="water_intake" value="5" />
-          <label for="water_five">5</label>
+      <div class="container-sliders">
+        <div class="slidecontainer">
+          <label for="journalDescription" class="form-label"
+            >Water Intake (Cups):
+          </label>
+          <input
+            type="range"
+            name="water_intake"
+            min="0"
+            max="16"
+            value="8"
+            class="slider"
+            id="waterRange"
+            onchange="updateWater(this.value)"
+          />
+          <input
+            type="text"
+            id="waterText"
+            value="8"
+            onchange="updateWater(this.value)"
+          />
         </div>
-      </fieldset>
+        <!-- Exercise Rating-->
+        <div class="slidecontainer">
+          <label for="journalDescription" class="form-label" align="left"
+            >Exercise Time (in minutes):
+          </label>
+          <input
+            type="range"
+            name="exercise_time"
+            min="0"
+            max="150"
+            value="75"
+            class="slider"
+            id="exerciseRange"
+            onchange="updateExercise(this.value)"
+          />
+          <input
+            type="text"
+            id="exerciseText"
+            value="75"
+            onchange="updateExercise(this.value)"
+          />
+        </div>
+      </div>
       <!-- Journal -->
-      <label for="journalDescription" class="form-label"
-        >Reflect on your day and take notes of how you felt:
+      <label for="journalDescription" class="form-label" align="left"
+        >Reflect on your day and take notes on how you felt:
       </label>
       <!-- Text Area -->
       <textarea
@@ -189,6 +181,75 @@ incorporates models. -->
   //Gathers the form and the submit button
   const form = document.getElementById("myForm");
   const submitButton = document.getElementById("submitButton");
+  const exerciseSlide = document.getElementById("exerciseRange");
+  const exerciseText = document.getElementById("exerciseText");
+  const waterSlide = document.getElementById("waterRange");
+  const waterText = document.getElementById("waterText");
+
+  //On updates to the slider or input textbox
+  function updateExercise(val) {
+    //Variables
+    var max = exerciseSlide.max;
+    var min = exerciseSlide.min;
+    val = parseInt(val, 10);
+
+    //If the value is within the range and an integer
+    if (Number.isInteger(val)) {
+      //If the value is over the max then set the value to the max
+      if (val > max) {
+        exerciseText.value = max;
+        exerciseSlide.value = max;
+      }
+      //If the value is in the range, then set the values to the value
+      else if (val >= min) {
+        exerciseText.value = val;
+        exerciseSlide.value = val;
+      }
+      //If the value is less than the min, then set to min value
+      else {
+        exerciseText.value = min;
+        exerciseSlide.value = min;
+      }
+      return;
+    }
+    //If the value is not an integer, set to the middle of the slider range
+    else {
+      exerciseText.value = max / 2;
+      exerciseSlide.value = max / 2;
+    }
+  }
+
+  //On updates to the slider or input textbox
+  function updateWater(val) {
+    //Variables
+    var max = waterSlide.max;
+    var min = waterSlide.min;
+    val = parseInt(val, 10);
+
+    //If the value is an integer
+    if (Number.isInteger(val)) {
+      //If the value is over the max then set the value to the max
+      if (val > max) {
+        waterText.value = max;
+        waterSlide.value = max;
+      }
+      //If the value is in the range, then set the values to the value
+      else if (val >= min) {
+        waterText.value = val;
+        waterSlide.value = val;
+      }
+      //If the value is less than the range, then set to min
+      else {
+        waterText.value = min;
+        waterSlide.value = min;
+      }
+    }
+    //If the value is not an integer, set to the middle of the slider range
+    else {
+      waterText.value = max / 2;
+      waterSlide.value = max / 2;
+    }
+  }
 
   form.addEventListener("change", function () {
     const radioGroups = form.querySelectorAll('input[type="radio"]');
@@ -219,23 +280,6 @@ incorporates models. -->
       submitButton.setAttribute("disabled", "disabled");
     }
   });
-
-  /*function Entries() {
-    mood_level = document.querySelector("input[name=mood_level]:checked").value;
-    sleep_quality = document.querySelector(
-      "input[name=sleep_quality]:checked",
-    ).value;
-    exercise_time = document.querySelector(
-      "input[name=exercise_time]:checked",
-    ).value;
-    diet_quality = document.querySelector(
-      "input[name=diet_quality]:checked",
-    ).value;
-    water_intake = document.querySelector(
-      "input[name=water_intake]:checked",
-    ).value;
-    journal_text = document.getElementByID("journal_text").value;
-  }*/
 </script>
 
 {% endblock %}
