@@ -1,23 +1,24 @@
-from django.http.response import HttpResponse
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from mh_tracker.models import JournalEntry, User, Article, Videos, Therapist
-from django.http import JsonResponse, HttpResponseRedirect
-from mh_tracker.models import JournalEntry, User
+import calendar
+import datetime as datetime
+import json
+
+import requests
+from django.conf import settings as django_settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignupForm, LoginForm, TherapistForm
-from .models import SubstanceAbuseTracking
-from django.urls import reverse
-from django.utils.timezone import now
 from django.core.mail import send_mail
+
 #from django_project.settings import EMAIL_HOST_PASSWORD_1, EMAIL_HOST_USER_1
 from django.db.models import Q
-from django.conf import settings as django_settings
-import requests
-import datetime as datetime
-import calendar
-import json
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.timezone import now
+
+from mh_tracker.models import Article, JournalEntry, Therapist, Videos
+
+from .forms import LoginForm, SignupForm, TherapistForm
+from .models import SubstanceAbuseTracking
 
 
 # Create your views here.
@@ -227,9 +228,53 @@ def userPage(request, user_id):
   return render(request, 'mh_tracker/user_form.html', context)
 '''
 def calendar_data(request):
-  journal_entries = JournalEntry.objects.filter(
-    user=request.user).order_by('date_created')
-  
+  journal_entries = JournalEntry.objects.filter(user=request.user)\
+.order_by('date_created')
+  events = []
+  for entry in journal_entries:
+      events.append({
+          'title': 'Sleep',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#FFA07A'
+      })
+      events.append({
+          'title': 'Exercise',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#90EE90'
+      })
+      events.append({
+          'title': 'Diet',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#87CEEB' 
+      })
+      events.append({
+          'title': 'Water',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#ADD8E6' 
+      })
+      events.append({
+          'title': 'Mood',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': get_mood_color(entry.mood_level),
+          'display': 'background'
+      })
+
+  return JsonResponse(data=events, safe=False)
+
+def get_mood_color(mood_level):
+  color_mapping = {
+      1: '#FF0000',  # Red
+      2: '#FFA500',  # Orange
+      3: '#FFFF00',  # Yellow
+      4: '#32CD32',  # Lime Green
+      5: '#00FF00',  # Green
+  }
+  return color_mapping.get(mood_level, '#FFFFFF') 
 
 def rescourcesPage(request):
   videos = Videos.objects.all()
