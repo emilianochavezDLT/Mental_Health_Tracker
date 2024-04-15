@@ -353,12 +353,21 @@ def reports(request):
 def send_email_self(request):
   data = json.loads(request.body)
   #Sends an email to the user with the request information
-  result = send_mail(data.get('Subject'),
-                     data.get('Message'),
-                     django_settings.EMAIL_HOST_USER_2, [request.user.email],
-                     fail_silently=False,
-                     auth_user=django_settings.EMAIL_HOST_USER_2,
-                     auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
+  if data.get('Therapist') and request.user.therapist is not None:
+    result = send_mail(data.get('Subject'),
+                       data.get('Message'),
+                       django_settings.EMAIL_HOST_USER_2,
+                       [request.user.email, request.user.therapist],
+                       fail_silently=False,
+                       auth_user=django_settings.EMAIL_HOST_USER_2,
+                       auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
+  else:
+    result = send_mail(data.get('Subject'),
+                       data.get('Message'),
+                       django_settings.EMAIL_HOST_USER_2, [request.user.email],
+                       fail_silently=False,
+                       auth_user=django_settings.EMAIL_HOST_USER_2,
+                       auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
   return JsonResponse({'result': result})
 
 

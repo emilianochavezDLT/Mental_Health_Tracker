@@ -6,6 +6,7 @@ from datetime import datetime
 from django.core import mail
 from unittest.mock import patch
 from django.conf import settings as django_settings
+from django.core.mail import EmailMessage
 import json
 
 
@@ -131,6 +132,12 @@ class ReportsTestCase(TestCase):
     #Creates a User
     self.user = User.objects.create_user(username='testuser', password='12345')
     self.client.login(username='testuser', password='12345')
+    self.user.therapist = Therapist.objects.create(user=self.user,
+                                                   first_name='test',
+                                                   last_name='test',
+                                                   email='test@test.com',
+                                                   company='test',
+                                                   phone_number=1)
 
   def test_report_single_positive(self):
     #Creates a positive Journal Entry
@@ -293,19 +300,20 @@ class ReportsTestCase(TestCase):
     self.assertEqual(response.context['journal_entries_negative'], 0)
     self.assertEqual(response.context['journal_entries_positive'], 0)
 
+  #Patch in the email and acts as it sends to only the user
   @patch('mh_tracker.views.send_mail')
   def test_email_user(self, mock_send_mail):
-    # Set up mock behavior
-    mock_send_mail.return_value = 1  # Assuming 1 means success
+    #Set up mock behavior
+    mock_send_mail.return_value = 1
     data = {'Subject': 'Test Subject', 'Message': 'Test Message'}
     json_data = json.dumps(data)
 
-    # Trigger the code that sends the email
-    response = self.client.post(reverse('send_email_self'),
-                                content_type='application/json',
-                                data=json_data)
+    #Trigger the code that sends the email
+    self.client.post(reverse('send_email_self'),
+                     content_type='application/json',
+                     data=json_data)
 
-    # Assert that send_mail was called with the expected arguments
+    #Assert that send_mail was called with the expected arguments
     mock_send_mail.assert_called_once_with(
         'Test Subject',
         'Test Message',
@@ -314,5 +322,41 @@ class ReportsTestCase(TestCase):
         auth_user=django_settings.EMAIL_HOST_USER_2,
         auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
 
-    # Assert that the email was not actually sent
-    self.assertEqual(len(mail.outbox), 0)
+    #Fakes sending an email
+    email = EmailMessage(data['Subject'], data['Message'], self.user.email,
+                         [django_settings.EMAIL_HOST_USER_2])
+    email.send()
+
+    #Assert that email was sent
+    self.assertEqual(len(mail.outbox), 1)
+
+  #Patches email and acts that is has been sent to two or more users
+  @patch('mh_tracker.views.send_mail')
+  def test_email_user_therapist(self, mock_send_mail):
+    #Set up mock behavior
+    mock_send_mail.return_value = 1
+    data = {'Subject': 'Test Subject', 'Message': 'Test Message'}
+    json_data = json.dumps(data)
+
+    #Trigger the code that sends the email
+    self.client.post(reverse('send_email_self'),
+                     content_type='application/json',
+                     data=json_data)
+
+    #Assert that send_mail was called with the expected arguments
+    mock_send_mail.assert_called_once_with(
+        'Test Subject',
+        'Test Message',
+        django_settings.EMAIL_HOST_USER_2, [self.user.email],
+        fail_silently=False,
+        auth_user=django_settings.EMAIL_HOST_USER_2,
+        auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
+
+    #Fakes sending an email
+    email = EmailMessage(
+        data['Subject'], data['Message'], self.user.email,
+        [django_settings.EMAIL_HOST_USER_2, self.user.therapist])
+    email.send()
+
+    #Assert that email was sent
+    self.assertEqual(len(mail.outbox), 1)

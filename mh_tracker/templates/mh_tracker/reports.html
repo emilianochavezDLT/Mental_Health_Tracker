@@ -102,6 +102,8 @@
     <h2>Monthly Report</h2>
     <!-- Email yourself the report -->
     <button id="modalButton">Generate Report</button>
+    <input type="checkbox" id="therapist" name="therapist" value="Therapist" />
+    <label for="therapist">Include Therapist in Email</label><br />
     <div id="reportModal" class="modal">
       <div class="modal-content">
         <p>Your report has been sent to your email!</p>
@@ -240,11 +242,11 @@
   }
 
   btn.onclick = function () {
-    console.log("Button clicked!");
     var sendEmailURL = "{% url 'send_email_self' %}";
     var mail = {
       Subject: "Monthly Mental Health Tracker Report",
       Message: `For the past 31 days, you have had {{ mood_positive }} positive days and {{ mood_negative }} negative days. On positive days you averaged {{ sleepAvg_positive }} (1-5) energy from sleeping, {{ exerciseAvg_positive }} minutes of exercise, {{ dietAvg_positive }} (1-5) quality of diet, {{ waterAvg_positive }} cups of water, and did {{ journalAvg_entry }} do a journal entry.`,
+      Therapist: document.getElementById("therapist").checked,
     };
     jQuery.ajax({
       url: sendEmailURL,
