@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from mh_tracker.models import JournalEntry, User, Article, Videos, Therapist
@@ -10,11 +11,13 @@ from .models import SubstanceAbuseTracking
 from django.urls import reverse
 from django.utils.timezone import now
 from django.core.mail import send_mail
-from django_project.settings import EMAIL_HOST_USER
+#from django_project.settings import EMAIL_HOST_PASSWORD_1, EMAIL_HOST_USER_1
 from django.db.models import Q
+from django.conf import settings as django_settings
 import requests
 import datetime as datetime
 import calendar
+import json
 
 
 # Create your views here.
@@ -348,13 +351,15 @@ def reports(request):
 
 
 def send_email_self(request):
-  if request.method == 'POST':
-    #Sends an email to the user with the request information
-    send_mail(request.POST['Subject'],
-              request.POST['Message'],
-              request.POST['From'],
-              request.user.email,
-              fail_silently=False)
+  data = json.loads(request.body)
+  #Sends an email to the user with the request information
+  result = send_mail(data.get('Subject'),
+                     data.get('Message'),
+                     django_settings.EMAIL_HOST_USER_2, [request.user.email],
+                     fail_silently=False,
+                     auth_user=django_settings.EMAIL_HOST_USER_2,
+                     auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
+  return JsonResponse({'result': result})
 
 
 # Add a therapist for the user to have

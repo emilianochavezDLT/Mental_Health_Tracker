@@ -229,27 +229,45 @@
   var btn = document.getElementById("modalButton");
   var span = document.getElementsByClassName("close")[0];
 
+  function getCSRFToken() {
+    const csrfCookie = document.cookie
+      .split(";")
+      .find((cookie) => cookie.trim().startsWith("csrftoken="));
+    if (csrfCookie) {
+      return csrfCookie.split("=")[1];
+    }
+    return null;
+  }
+
   btn.onclick = function () {
-    //NEED TO ADD FUNCTIONALITY FOR SENDING EMAIL EITHER USING POST
-    //OR INSIDE THE JS
+    console.log("Button clicked!");
+    var sendEmailURL = "{% url 'send_email_self' %}";
     var mail = {
       Subject: "Monthly Mental Health Tracker Report",
-      Message:
-        "For the past 31 days, you have had ${mood_positive} positive days and ${mood_negative} negative days.",
-      From: "mhtrackeruccs@gmail.com",
+      Message: `For the past 31 days, you have had {{ mood_positive }} positive days and {{ mood_negative }} negative days. On positive days you averaged {{ sleepAvg_positive }} (1-5) energy from sleeping, {{ exerciseAvg_positive }} minutes of exercise, {{ dietAvg_positive }} (1-5) quality of diet, {{ waterAvg_positive }} cups of water, and did {{ journalAvg_entry }} do a journal entry.`,
     };
-    var XHR = new XMLHttpRequest();
-    XHR.open("POST", "{% url 'send_email_self'}", true);
-    XHR.setRequestHeader("Content-Type", "application/json");
-    XHR.onreadystatechange = function () {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        modal.text = "Email sent successfully!";
-        //alert("Email sent successfully!");
-      } else {
-        modal.text = "Error sending email!";
-      }
-    };
-    XHR.send(JSON.stringify({ mail }));
+    jQuery.ajax({
+      url: sendEmailURL,
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(mail),
+      headers: {
+        "X-CSRFToken": getCSRFToken(),
+      },
+      success: function (data) {
+        modal.querySelector(".modal-content p").textContent =
+          "Email sent successfully!";
+        console.log("Received response from Python:", data.result);
+      },
+      error: function (xhr, status, error) {
+        modal.querySelector(".modal-content p").textContent =
+          "Error sending Email!";
+        console.error("Error calling Python function:", error);
+        console.error("Status:", status);
+        console.error("Error:", error);
+        console.error("Response Text:", xhr.responseText);
+      },
+    });
 
     //Displays modal
     modal.style.display = "block";

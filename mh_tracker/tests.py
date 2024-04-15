@@ -1,9 +1,12 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import JournalEntry, SubstanceAbuseTracking, Article, Videos, Therapist
 from datetime import datetime
 from django.core import mail
+from unittest.mock import patch
+from django.conf import settings as django_settings
+import json
 
 
 class ModelsTestCase(TestCase):
@@ -92,7 +95,7 @@ class URLAccessTestCase(TestCase):
     self.assertEqual(response.status_code, 200)
 
   def test_reports_access(self):
-    response = self.client.post(reverse('reports'))
+    response = self.client.get(reverse('reports'))
     self.assertEqual(response.status_code, 200)
 
 
@@ -140,7 +143,7 @@ class ReportsTestCase(TestCase):
                                                      journal_text="Test entry")
 
     #Gather the response of the Template after calling the Template
-    response = self.clie
+    response = self.client.get(reverse('reports'), '')
 
     #Assert the values in context are sent in correctly to calc stats
     self.assertEqual(response.context['mood_negative'], 0)
@@ -290,22 +293,26 @@ class ReportsTestCase(TestCase):
     self.assertEqual(response.context['journal_entries_negative'], 0)
     self.assertEqual(response.context['journal_entries_positive'], 0)
 
-  def test_email_user(self):
-    #Informatio necessary to send an email
-    request = {
-        "Subject": "Test",
-        "Message": "Test",
-        "From": "mhtrackeruccs@gmail.com"
-    }
+  @patch('mh_tracker.views.send_mail')
+  def test_email_user(self, mock_send_mail):
+    # Set up mock behavior
+    mock_send_mail.return_value = 1  # Assuming 1 means success
+    data = {'Subject': 'Test Subject', 'Message': 'Test Message'}
+    json_data = json.dumps(data)
 
-    #POST for the send email functionality
-    self.client.post(reverse('send_email_self'), request)
+    # Trigger the code that sends the email
+    response = self.client.post(reverse('send_email_self'),
+                                content_type='application/json',
+                                data=json_data)
 
-    #Assert that an email was sent
-    self.assertEqual(len(mail.outbox), 1)
+    # Assert that send_mail was called with the expected arguments
+    mock_send_mail.assert_called_once_with(
+        'Test Subject',
+        'Test Message',
+        django_settings.EMAIL_HOST_USER_2, [self.user.email],
+        fail_silently=False,
+        auth_user=django_settings.EMAIL_HOST_USER_2,
+        auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
 
-    #Assert that the contents and sender of the email are correct
-    email = mail.outbox[0]
-    self.assertEqual(email.subject, request['Subject'])
-    self.assertEqual(email.body, request['Message'])
-    self.assertEqual(email.from_email, request['From'])
+    # Assert that the email was not actually sent
+    self.assertEqual(len(mail.outbox), 0)
