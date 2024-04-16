@@ -19,6 +19,7 @@ from mh_tracker.models import Article, JournalEntry, Therapist, Videos
 
 from .forms import LoginForm, SignupForm, TherapistForm
 from .models import SubstanceAbuseTracking
+from .tasks import send_email_report_task
 
 
 # Create your views here.
@@ -227,44 +228,47 @@ def userPage(request, user_id):
   context = {'form': form, 'app_user': app_user, 'profile': profile}
   return render(request, 'mh_tracker/user_form.html', context)
 '''
+
+
 def calendar_data(request):
   journal_entries = JournalEntry.objects.filter(user=request.user)\
 .order_by('date_created')
   events = []
   for entry in journal_entries:
-      events.append({
-          'title': 'Sleep',
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': '#FFA07A'
-      })
-      events.append({
-          'title': 'Exercise',
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': '#90EE90'
-      })
-      events.append({
-          'title': 'Diet',
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': '#87CEEB' 
-      })
-      events.append({
-          'title': 'Water',
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': '#ADD8E6' 
-      })
-      events.append({
-          'title': 'Mood',
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': get_mood_color(entry.mood_level),
-          'display': 'background'
-      })
+    events.append({
+        'title': 'Sleep',
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '#FFA07A'
+    })
+    events.append({
+        'title': 'Exercise',
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '#90EE90'
+    })
+    events.append({
+        'title': 'Diet',
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '#87CEEB'
+    })
+    events.append({
+        'title': 'Water',
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '#ADD8E6'
+    })
+    events.append({
+        'title': 'Mood',
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': get_mood_color(entry.mood_level),
+        'display': 'background'
+    })
 
   return JsonResponse(data=events, safe=False)
+
 
 def get_mood_color(mood_level):
   color_mapping = {
@@ -274,7 +278,8 @@ def get_mood_color(mood_level):
       4: '#32CD32',  # Lime Green
       5: '#00FF00',  # Green
   }
-  return color_mapping.get(mood_level, '#FFFFFF') 
+  return color_mapping.get(mood_level, '#FFFFFF')
+
 
 def rescourcesPage(request):
   videos = Videos.objects.all()
@@ -398,24 +403,15 @@ def reports(request):
     return redirect('mh_tracker/home.html')
 
 
-def send_email_self(request):
+def send_email_report(request):
   data = json.loads(request.body)
+  Subject = data.get('Subject')
+  Message = data.get('Message')
+  Emails = [request.user.email]
   #Sends an email to the user with the request information
   if data.get('Therapist') and request.user.therapist is not None:
-    result = send_mail(data.get('Subject'),
-                       data.get('Message'),
-                       django_settings.EMAIL_HOST_USER_2,
-                       [request.user.email, request.user.therapist],
-                       fail_silently=False,
-                       auth_user=django_settings.EMAIL_HOST_USER_2,
-                       auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
-  else:
-    result = send_mail(data.get('Subject'),
-                       data.get('Message'),
-                       django_settings.EMAIL_HOST_USER_2, [request.user.email],
-                       fail_silently=False,
-                       auth_user=django_settings.EMAIL_HOST_USER_2,
-                       auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
+    Emails.append(request.user.therapist.email)
+  result = send_email_report_task(Subject, Message, Emails)
   return JsonResponse({'result': result})
 
 
