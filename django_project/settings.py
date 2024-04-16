@@ -113,7 +113,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
 
-#Currently only prints to console
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 
@@ -129,5 +128,4 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
-
-
+CELERY_ENABLE_UTC = False

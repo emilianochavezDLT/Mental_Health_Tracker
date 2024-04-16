@@ -1,5 +1,6 @@
 import os
 from celery import Celery
+from celery.schedules import crontab
 
 #Defining a Celery Instance
 #From developer documentation
@@ -22,3 +23,12 @@ app.autodiscover_tasks()
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):
     print(f'Request: {self.request!r}')
+
+
+app.conf.beat_schedule = {
+    # Executes everyday at 6:30 p.m.
+    'send_email_reminder': {
+        'task': 'send_reminder_email_task',
+        'schedule': crontab(hour='12', minute='30', day_of_week='sun-sat'),
+    },
+}
