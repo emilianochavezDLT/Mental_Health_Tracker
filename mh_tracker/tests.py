@@ -8,6 +8,7 @@ from unittest.mock import patch
 from django.conf import settings as django_settings
 from django.core.mail import EmailMessage
 import json
+from django.utils import timezone
 
 
 class ModelsTestCase(TestCase):
@@ -299,3 +300,26 @@ class ReportsTestCase(TestCase):
     self.assertEqual(response.context['water_positive'], 0)
     self.assertEqual(response.context['journal_entries_negative'], 0)
     self.assertEqual(response.context['journal_entries_positive'], 0)
+
+
+class SubstanceAbuseChartTest(TestCase):
+
+  def setUp(self):
+    # Create a test user
+    self.user = User.objects.create_user(username='testuser', password='12345')
+    self.client.login(username='testuser', password='12345')
+
+    # Optionally, create a SubstanceAbuseTracking instance for today if needed
+    today = timezone.now().date()
+    SubstanceAbuseTracking.objects.create(user=self.user,
+                                          date=today,
+                                          counter=0)
+
+  def test_template_rendering_and_elements(self):
+    # The name 'substance_abuse_chart' is a placeholder, replace it with the actual name of your URL
+    response = self.client.get(reverse('substance_abuse_chart'))
+    self.assertEqual(response.status_code, 200)
+
+    # Check if the response contains specific elements
+    self.assertContains(response, 'canvas id="substanceAbuseChart"')
+    self.assertContains(response, '<h2 id="positive-quotes"></h2>', html=True)
