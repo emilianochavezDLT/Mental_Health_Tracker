@@ -231,44 +231,43 @@ def userPage(request, user_id):
 
 
 def calendar_data(request):
-  journal_entries = JournalEntry.objects.filter(user=request.user)\
-.order_by('date_created')
+  journal_entries = JournalEntry.objects.filter(user=request.user).order_by('date_created')
   events = []
   for entry in journal_entries:
-    events.append({
-        'title': 'Sleep',
-        'start': entry.date_created.strftime('%Y-%m-%d'),
-        'end': entry.date_created.strftime('%Y-%m-%d'),
-        'color': '#FFA07A'
-    })
-    events.append({
-        'title': 'Exercise',
-        'start': entry.date_created.strftime('%Y-%m-%d'),
-        'end': entry.date_created.strftime('%Y-%m-%d'),
-        'color': '#90EE90'
-    })
-    events.append({
-        'title': 'Diet',
-        'start': entry.date_created.strftime('%Y-%m-%d'),
-        'end': entry.date_created.strftime('%Y-%m-%d'),
-        'color': '#87CEEB'
-    })
-    events.append({
-        'title': 'Water',
-        'start': entry.date_created.strftime('%Y-%m-%d'),
-        'end': entry.date_created.strftime('%Y-%m-%d'),
-        'color': '#ADD8E6'
-    })
-    events.append({
-        'title': 'Mood',
-        'start': entry.date_created.strftime('%Y-%m-%d'),
-        'end': entry.date_created.strftime('%Y-%m-%d'),
-        'color': get_mood_color(entry.mood_level),
-        'display': 'background'
-    })
-
+      events.append({
+          'title': 'Sleep: {}'.format(entry.sleep_quality),
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#FFA07A'
+      })
+      events.append({
+          'title': 'Exercise: {}'.format(entry.exercise_time),
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#90EE90'
+      })
+      events.append({
+          'title': 'Diet: {}'.format(entry.diet_quality),
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#87CEEB'
+      })
+      events.append({
+          'title': 'Water: {}'.format(entry.water_intake),
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#ADD8E6'
+      })
+      events.append({ 
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': get_mood_color(entry.mood_level),
+          'display': 'background'
+      })
+  
   return JsonResponse(data=events, safe=False)
-
+  
+  
 
 def get_mood_color(mood_level):
   color_mapping = {
