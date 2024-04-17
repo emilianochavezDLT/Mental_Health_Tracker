@@ -12,7 +12,7 @@
       href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
       rel="stylesheet"
     />
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link
@@ -56,7 +56,7 @@
 
       .sidebar a:hover {
         color: #f111f1;
-      } 
+      }
 
       .sidebar .closebtn {
         font-size: 36px;
@@ -78,7 +78,7 @@
         background-color: indigo;
       }
       .closebtn {
-        font-size: 20px; 
+        font-size: 20px;
         cursor: pointer;
         color: white;
         position: absolute;
@@ -90,25 +90,25 @@
       .closebtn:hover {
         color: gold;
       }
-      .nav_br{
-        width:300vmax;
+      .nav_br {
+        width: 300vmax;
       }
-      .nav-column { 
-        color: white; 
+      .nav-column {
+        color: white;
       }
       .nav-link {
-        background-color: white;     
-        border: none; 
-        padding: 20px 20px; 
-        margin-bottom: 5px; 
-        margin-top: 5px; 
-        display: block; 
-        text-align: left; 
-        text-decoration: none; 
+        background-color: white;
+        border: none;
+        padding: 20px 20px;
+        margin-bottom: 5px;
+        margin-top: 5px;
+        display: block;
+        text-align: left;
+        text-decoration: none;
         border-radius: 5px;
       }
       .nav-link:hover {
-        background-color: #eee; 
+        background-color: #eee;
       }
 
       #main {
@@ -141,10 +141,11 @@
       >
       <a class="nav-link" href="{% url 'resources' %}">Resources</a>
       <a class="nav-link" href="{% url 'settings' %}">Settings</a>
+      <a class="nav-link" href="{% url 'reports' %}">Reports</a>
     </div>
 
     {% block content %}{% endblock %}
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>

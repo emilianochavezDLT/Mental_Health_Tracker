@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,9 +120,8 @@ SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ['SEND_GRID']
-EMAIL_PORT = 587 #For TSL
+EMAIL_PORT = 587  #For TSL
 Email_USE_TSL = True
-
 
 #Celery Configurations
 CELERY_RESULT_BACKEND = 'django-db'

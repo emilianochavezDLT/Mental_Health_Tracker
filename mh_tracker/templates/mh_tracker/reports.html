@@ -1,14 +1,91 @@
 {% extends "mh_tracker/base_template.html" %} {% block content %}
 
 <style>
-  .container {
-    text-align: center;
+  body {
+    justify-content: center;
+    align-items: center;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
   }
 
-  .card {
+  li {
     display: inline-block;
-    height: 150px;
+    vertical-align: middle;
+  }
+
+  /*Help from w3schools for Modal setup*/
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: index; 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .container-wrapper {
+    justify-content: center;
+    align-items: flex-start;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  #card_bg {
+    background-color: indigo;
+    opacity: 0.5;
+  }
+
+  .card {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: flex;
     width: 400px !important;
     margin: 10px;
   }
@@ -18,83 +95,195 @@
   }
 </style>
 
-<div class="container">
-  <h2>Monthly Report</h2>
-  <div class="card" style="width: 18rem">
-    <div class="card-body">
-      <h5 class="card-title">Mood</h5>
-      <p id="mood" class="card-text">
-        You had a positive mood for {{ mood_positive }} days.<br />
-        You had a normal mood for {{ mood_neutral }} days.<br />
-        You had anegative mood for {{ mood_negative }} days.
-      </p>
+<!-- Wrapper for containers -->
+<div class="container-wrapper">
+  <!-- Container for the cards to do with general stats -->
+  <div class="container">
+    <h2>Monthly Report</h2>
+    <!-- Email yourself the report -->
+    <button id="modalButton">Generate Report</button>
+    <input type="checkbox" id="therapist" name="therapist" value="Therapist" />
+    <label for="therapist">Include Therapist in Email</label><br />
+    <div id="reportModal" class="modal">
+      <div class="modal-content">
+        <p>Your report has been sent to your email!</p>
+        <span class="close">&times;</span>
+      </div>
+    </div>
+    <!-- Container to have two cards per row -->
+    <div class="container-cards">
+      <!-- Card for Mood stats -->
+      <div class="card" style="width: 18rem">
+        <div id="card_bg" class="card-body">
+          <h5 class="card-title text-warning">Mood</h5>
+          <p id="mood" class="card-text text-warning">
+            You had a positive mood for {{ mood_positive }} days.<br />
+            You had a normal mood for {{ mood_neutral }} days.<br />
+            You had anegative mood for {{ mood_negative }} days.
+          </p>
+        </div>
+      </div>
+      <!-- Card for Sleep stats -->
+      <div class="card" style="width: 18rem">
+        <div id="card_bg" class="card-body">
+          <h5 class="card-title text-warning">Sleep</h5>
+          <p id="sleep" class="card-text text-warning">
+            You had {{ sleep_negative }} days with low energy.<br />
+            You had {{ sleep_neutral }} days with medium energy.<br />
+            You had {{ sleep_positive }} days with high energy.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="container-cards">
+      <!-- Card for Exercise stats -->
+      <div class="card" style="width: 18rem">
+        <div id="card_bg" class="card-body">
+          <h5 class="card-title text-warning">Exercise</h5>
+          <p id="exercise" class="card-text text-warning">
+            You had {{ exercise_negative }} days with minimal exercise.<br />
+            You had {{ exercise_positive }} days with a lot of exercise.<br />
+            <br />
+          </p>
+        </div>
+      </div>
+      <!-- Card for Diet stats -->
+      <div class="card" style="width: 18rem">
+        <div id="card_bg" class="card-body">
+          <h5 class="card-title text-warning">Diet</h5>
+          <p id="diet" class="card-text text-warning">
+            You had an unhealthy diet for {{ diet_negative }} days.<br />
+            You had a neutral diet for {{ diet_neutral }} days.<br />
+            You had a healthy diet for {{ diet_positive }} days.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="container-cards">
+      <!-- Card for Water stats -->
+      <div class="card" style="width: 18rem">
+        <div id="card_bg" class="card-body">
+          <h5 class="card-title text-warning">Water Intake</h5>
+          <p id="water" class="card-text text-warning">
+            You had a low amount of water on {{ water_negative }} days.<br />
+            You had a large amount of water on {{ water_positive }} days.<br />
+            <br />
+          </p>
+        </div>
+      </div>
+      <!-- Card for Journal stats -->
+      <div class="card" style="width: 18rem">
+        <div id="card_bg" class="card-body">
+          <h5 class="card-title text-warning">Journal Entries</h5>
+          <p id="water" class="card-text text-warning">
+            You entered a journal for {{ journal_entries_positive }} days.<br />
+            You did not enter a journal for {{ journal_entries_negative }}
+            days.<br />
+            <br />
+          </p>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="card" style="width: 18rem">
-    <div class="card-body">
-      <h5 class="card-title">Sleep</h5>
-      <p id="sleep" class="card-text">
-        You had {{ sleep_negative }} days with low energy.<br />
-        You had {{ sleep_neutral }} days with medium energy.<br />
-        You had {{ sleep_positive }} days with high energy.
-      </p>
-    </div>
-  </div>
-</div>
-<div class="container">
-  <div class="card" style="width: 18rem">
-    <div class="card-body">
-      <h5 class="card-title">Exercise</h5>
-      <p id="exercise" class="card-text">
-        You had {{ exercise_negative }} days with minimal exercise.<br />
-        You had {{ exercise_neutral }} days with medium exercise.<br />
-        You had {{ exercise_positive }} days with a lot of exercise.
-      </p>
-    </div>
-  </div>
-  <div class="card" style="width: 18rem">
-    <div class="card-body">
-      <h5 class="card-title">Diet</h5>
-      <p id="diet" class="card-text">
-        You had an unhealthy diet for {{ diet_negative }} days.<br />
-        You had a neutral diet for {{ diet_neutral }} days.<br />
-        You had a healthy diet for {{ diet_positive }} days.
-      </p>
-    </div>
-  </div>
-</div>
-<div class="container">
-  <div class="card" style="width: 18rem">
-    <div class="card-body">
-      <h5 class="card-title">Water Intake</h5>
-      <p id="water" class="card-text">
-        You had a low amount of water on {{ water_negative }} days.<br />
-        You had a medium amount of water on {{ water_neutral }} days.<br />
-        You had a large amount of water on {{ water_positive }} days.
-      </p>
-    </div>
-  </div>
-  <div class="card" style="width: 18rem">
-    <div class="card-body">
-      <h5 class="card-title">Journal Entries</h5>
-      <p id="water" class="card-text">
-        You entered a journal for {{ journal_entries_positive }} days.<br />
-        You did not enter a journal for {{ journal_entries_negative }} days.
-      </p>
+  <!-- Container for the more advanced stats -->
+  <div class="container">
+    <h2>Positive and Negative Days</h2>
+    <div class="container-cards">
+      <!-- Positive Day averages Card -->
+      <div class="card" style="width: 18rem">
+        <div id="card_bg" class="card-body">
+          <h5 class="card-title text-warning">Positive Days</h5>
+          <div id="stats" class="card-text text-warning">
+            On Positive Days you usually had:<br />
+            <ul class="list-group text-warning">
+              <li>Energy from Sleep (1-5): {{ sleepAvg_positive }}</li>
+              <li>Minutes of Exercise: {{ exerciseAvg_positive }}</li>
+              <li>Quality of Diet (1-5): {{ dietAvg_positive }}</li>
+              <li>Cups of Water: {{ waterAvg_positive }}</li>
+              <li>Did {{ journalAvg_positive }} fill out a Journal Entry</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Negative Day averages Card -->
+      <div class="card" style="width: 18rem">
+        <div id="card_bg" class="card-body">
+          <h5 class="card-title text-warning">Negative Days</h5>
+          <div id="stats" class="card-text text-warning">
+            On Negative Days you usually had:<br />
+            <ul class="list-group text-warning">
+              <li>Energy from Sleep (1-5): {{ sleepAvg_negative }}</li>
+              <li>Minutes of Exercise: {{ exerciseAvg_negative }}</li>
+              <li>Quality of Diet (1-5): {{ dietAvg_negative }}</li>
+              <li>Cups of Water: {{ waterAvg_negative }}</li>
+              <li>Did {{ journalAvg_negative }} fill out a Journal Entry</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  const mood = document.getElementById("mood");
-  const sleep = document.getElementById("sleep");
-  const exercise = document.getElementById("exercise");
-  const diet = document.getElementById("diet");
-  const water = document.getElementById("water");
+  //Help from w3schools for Modal functionality
+  var modal = document.getElementById("reportModal");
+  var btn = document.getElementById("modalButton");
+  var span = document.getElementsByClassName("close")[0];
 
-  function generateReport() {
-    mood.text = "You had a positive mood for ${mood} days.";
+  function getCSRFToken() {
+    const csrfCookie = document.cookie
+      .split(";")
+      .find((cookie) => cookie.trim().startsWith("csrftoken="));
+    if (csrfCookie) {
+      return csrfCookie.split("=")[1];
+    }
+    return null;
   }
+
+  btn.onclick = function () {
+    var sendEmailURL = "{% url 'send_email_self' %}";
+    var mail = {
+      Subject: "Monthly Mental Health Tracker Report",
+      Message: `For the past 31 days, you have had {{ mood_positive }} positive days and {{ mood_negative }} negative days. On positive days you averaged {{ sleepAvg_positive }} (1-5) energy from sleeping, {{ exerciseAvg_positive }} minutes of exercise, {{ dietAvg_positive }} (1-5) quality of diet, {{ waterAvg_positive }} cups of water, and did {{ journalAvg_entry }} do a journal entry.`,
+      Therapist: document.getElementById("therapist").checked,
+    };
+    jQuery.ajax({
+      url: sendEmailURL,
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify(mail),
+      headers: {
+        "X-CSRFToken": getCSRFToken(),
+      },
+      success: function (data) {
+        modal.querySelector(".modal-content p").textContent =
+          "Email sent successfully!";
+        console.log("Received response from Python:", data.result);
+      },
+      error: function (xhr, status, error) {
+        modal.querySelector(".modal-content p").textContent =
+          "Error sending Email!";
+        console.error("Error calling Python function:", error);
+        console.error("Status:", status);
+        console.error("Error:", error);
+        console.error("Response Text:", xhr.responseText);
+      },
+    });
+
+    //Displays modal
+    modal.style.display = "block";
+  };
+
+  span.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
 </script>
 
 {% endblock %}

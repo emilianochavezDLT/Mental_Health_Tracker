@@ -1,20 +1,24 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from mh_tracker.models import JournalEntry, User, Article, Videos, Therapist
-from django.http import JsonResponse, HttpResponseRedirect
-from mh_tracker.models import JournalEntry, User
+import calendar
+import datetime as datetime
+import json
+
+import requests
+from django.conf import settings as django_settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignupForm, LoginForm, TherapistForm
-from .models import SubstanceAbuseTracking
+from django.core.mail import send_mail
+
+#from django_project.settings import EMAIL_HOST_PASSWORD_1, EMAIL_HOST_USER_1
+from django.db.models import Q
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.timezone import now
-from django.core.mail import send_mail
-from django_project.settings import EMAIL_HOST_USER
-from django.db.models import Q
-import requests
-import datetime as datetime
-import calendar
+
+from mh_tracker.models import Article, JournalEntry, Therapist, Videos
+
+from .forms import LoginForm, SignupForm, TherapistForm
+from .models import SubstanceAbuseTracking
 
 
 # Create your views here.
@@ -166,7 +170,7 @@ def update_substance_use(request, action):
   if request.method == 'POST':
     today = now().date()
     entry, created = SubstanceAbuseTracking.objects.get_or_create(
-        user=request.user, date=today, defaults={'counters': 0})
+        user=request.user, date=today, defaults={'counter': 0})
     if action == 'increment':
       entry.counter += 1
       entry.save()
@@ -223,7 +227,54 @@ def userPage(request, user_id):
   context = {'form': form, 'app_user': app_user, 'profile': profile}
   return render(request, 'mh_tracker/user_form.html', context)
 '''
+def calendar_data(request):
+  journal_entries = JournalEntry.objects.filter(user=request.user)\
+.order_by('date_created')
+  events = []
+  for entry in journal_entries:
+      events.append({
+          'title': 'Sleep',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#FFA07A'
+      })
+      events.append({
+          'title': 'Exercise',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#90EE90'
+      })
+      events.append({
+          'title': 'Diet',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#87CEEB' 
+      })
+      events.append({
+          'title': 'Water',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': '#ADD8E6' 
+      })
+      events.append({
+          'title': 'Mood',
+          'start': entry.date_created.strftime('%Y-%m-%d'),
+          'end': entry.date_created.strftime('%Y-%m-%d'),
+          'color': get_mood_color(entry.mood_level),
+          'display': 'background'
+      })
 
+  return JsonResponse(data=events, safe=False)
+
+def get_mood_color(mood_level):
+  color_mapping = {
+      1: '#FF0000',  # Red
+      2: '#FFA500',  # Orange
+      3: '#FFFF00',  # Yellow
+      4: '#32CD32',  # Lime Green
+      5: '#00FF00',  # Green
+  }
+  return color_mapping.get(mood_level, '#FFFFFF') 
 
 def rescourcesPage(request):
   videos = Videos.objects.all()
@@ -234,60 +285,139 @@ def rescourcesPage(request):
 
 @login_required
 def reports(request):
-  #Dictionary for passing in context
-  context = {}
+  if request.method == 'GET':
+    #Dictionary for passing in context
+    context = {}
 
-  #Gets the Journal Entries for the user for the past 31 days
-  d = datetime.date.today() - datetime.timedelta(days=31)
-  data = JournalEntry.objects.filter(user=request.user, date_created__gte=d)
+    #Gets the Journal Entries for the user for the past 31 days
+    d = datetime.date.today() - datetime.timedelta(days=31)
+    data = JournalEntry.objects.filter(user=request.user, date_created__gte=d)
 
-  #Gathers the mood data and adds it to the context dictionary
-  temp_data = data.filter(mood_level__lte=2)
-  context.update({"mood_negative": temp_data.count()})
-  temp_data = data.filter(mood_level=3)
-  context.update({"mood_neutral": temp_data.count()})
-  temp_data = data.filter(mood_level__gte=4)
-  context.update({"mood_positive": temp_data.count()})
+    #Gathers the mood data and adds it to the context dictionary
 
-  #Gathers the sleep data and adds it to the context dictionary
-  temp_data = data.filter(sleep_quality__lte=2)
-  context.update({"sleep_negative": temp_data.count()})
-  temp_data = data.filter(sleep_quality=3)
-  context.update({"sleep_neutral": temp_data.count()})
-  temp_data = data.filter(sleep_quality__gte=4)
-  context.update({"sleep_positive": temp_data.count()})
+    #Sleep, Exercise, Diet, Water, Journal
+    stats = [0, 0, 0, 0, 0]
+    inputNames = [
+        'sleepAvg', 'exerciseAvg', 'dietAvg', 'waterAvg', 'journalAvg'
+    ]
 
-  #Gathers the exercise data and adds it to the context dictionary
-  temp_data = data.filter(exercise_time__lte=2)
-  context.update({"exercise_negative": temp_data.count()})
-  temp_data = data.filter(exercise_time=3)
-  context.update({"exercise_neutral": temp_data.count()})
-  temp_data = data.filter(exercise_time__gte=4)
-  context.update({"exercise_positive": temp_data.count()})
+    #Advanced negative stats
+    temp_data = data.filter(mood_level__lte=2)
+    context.update({"mood_negative": temp_data.count()})
 
-  #Gathers the diet data and adds it to the context dictionary
-  temp_data = data.filter(diet_quality__lte=2)
-  context.update({"diet_negative": temp_data.count()})
-  temp_data = data.filter(diet_quality=3)
-  context.update({"diet_neutral": temp_data.count()})
-  temp_data = data.filter(diet_quality__gte=4)
-  context.update({"diet_positive": temp_data.count()})
+    for item in temp_data:
+      stats[0] += item.sleep_quality
+      stats[1] += item.exercise_time
+      stats[2] += item.diet_quality
+      stats[3] += item.water_intake
+      if item.journal_text != "":
+        stats[4] += 1
 
-  #Gathers the water data and adds it to the context dictionary
-  temp_data = data.filter(water_intake__lte=2)
-  context.update({"water_negative": temp_data.count()})
-  temp_data = data.filter(water_intake=3)
-  context.update({"water_neutral": temp_data.count()})
-  temp_data = data.filter(water_intake__gte=4)
-  context.update({"water_positive": temp_data.count()})
+    for i in range(0, len(stats)):
+      if temp_data.count() == 0:
+        if i != 4:
+          context.update({inputNames[i] + '_negative': 0})
+        else:
+          context.update({inputNames[i] + '_negative': 'not'})
+      elif i == 4:
+        temp = '' if stats[4] >= 0.5 else 'not'
+        context.update({inputNames[i] + '_negative': temp})
+      else:
+        stats[i] /= temp_data.count()
+        stats[i] = round(stats[i], 2)
+        context.update({inputNames[i] + '_negative': stats[i]})
 
-  #Gathers the journal entry data and adds it to the context dictionary
-  temp_data = data.filter(journal_text="")
-  context.update({"journal_entries_negative": temp_data.count()})
-  temp_data = data.filter(~Q(journal_text=""))
-  context.update({"journal_entries_positive": temp_data.count()})
+    #Neutral Stats
+    temp_data = data.filter(mood_level=3)
+    context.update({"mood_neutral": temp_data.count()})
 
-  return render(request, 'mh_tracker/reports.html', context)
+    #Advanced positive stats
+    temp_data = data.filter(mood_level__gte=4)
+    context.update({"mood_positive": temp_data.count()})
+
+    stats = [0, 0, 0, 0, 0]
+
+    for item in temp_data:
+      stats[0] += item.sleep_quality
+      stats[1] += item.exercise_time
+      stats[2] += item.diet_quality
+      stats[3] += item.water_intake
+      if item.journal_text != "":
+        stats[4] += 1
+
+    for i in range(0, len(stats)):
+      if temp_data.count() == 0:
+        if i != 4:
+          context.update({inputNames[i] + '_positive': 0})
+        else:
+          context.update({inputNames[i] + '_positive': 'not'})
+      elif i == 4:
+        temp = '' if stats[4] >= 0.5 else 'not'
+        context.update({inputNames[i] + '_positive': temp})
+      else:
+        stats[i] /= temp_data.count()
+        stats[i] = round(stats[i], 2)
+        context.update({inputNames[i] + '_positive': stats[i]})
+
+    #Gathers the sleep data and adds it to the context dictionary
+    temp_data = data.filter(sleep_quality__lte=2)
+    context.update({"sleep_negative": temp_data.count()})
+    temp_data = data.filter(sleep_quality=3)
+    context.update({"sleep_neutral": temp_data.count()})
+    temp_data = data.filter(sleep_quality__gte=4)
+    context.update({"sleep_positive": temp_data.count()})
+
+    #Gathers the exercise data and adds it to the context dictionary
+    temp_data = data.filter(exercise_time__lte=59)
+    context.update({"exercise_negative": temp_data.count()})
+    temp_data = data.filter(exercise_time__gte=60)
+    context.update({"exercise_positive": temp_data.count()})
+
+    #Gathers the diet data and adds it to the context dictionary
+    temp_data = data.filter(diet_quality__lte=2)
+    context.update({"diet_negative": temp_data.count()})
+    temp_data = data.filter(diet_quality=3)
+    context.update({"diet_neutral": temp_data.count()})
+    temp_data = data.filter(diet_quality__gte=4)
+    context.update({"diet_positive": temp_data.count()})
+
+    #Gathers the water data and adds it to the context dictionary
+    temp_data = data.filter(water_intake__lte=7)
+    context.update({"water_negative": temp_data.count()})
+    temp_data = data.filter(water_intake__gte=8)
+    context.update({"water_positive": temp_data.count()})
+
+    #Gathers the journal entry data and adds it to the context dictionary
+    temp_data = data.filter(journal_text="")
+    context.update({"journal_entries_negative": temp_data.count()})
+    temp_data = data.filter(~Q(journal_text=""))
+    context.update({"journal_entries_positive": temp_data.count()})
+
+    return render(request, 'mh_tracker/reports.html', context)
+  else:
+    return redirect('mh_tracker/home.html')
+
+
+def send_email_self(request):
+  data = json.loads(request.body)
+  #Sends an email to the user with the request information
+  if data.get('Therapist') and request.user.therapist is not None:
+    result = send_mail(data.get('Subject'),
+                       data.get('Message'),
+                       django_settings.EMAIL_HOST_USER_2,
+                       [request.user.email, request.user.therapist],
+                       fail_silently=False,
+                       auth_user=django_settings.EMAIL_HOST_USER_2,
+                       auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
+  else:
+    result = send_mail(data.get('Subject'),
+                       data.get('Message'),
+                       django_settings.EMAIL_HOST_USER_2, [request.user.email],
+                       fail_silently=False,
+                       auth_user=django_settings.EMAIL_HOST_USER_2,
+                       auth_password=django_settings.EMAIL_HOST_PASSWORD_2)
+  return JsonResponse({'result': result})
+
 
 # Add a therapist for the user to have
 def add_therapist(request):
@@ -298,8 +428,10 @@ def add_therapist(request):
       return redirect('home')
   else:
     therapist = TherapistForm()
-    return render(request, 'mh_tracker/add_therapist.html', {'therapist': therapist})
-  
+    return render(request, 'mh_tracker/add_therapist.html',
+                  {'therapist': therapist})
+
+
 # View all therapists
 #I might have to put all of this into the settings view!!
 def view_therapists(request):
@@ -307,8 +439,5 @@ def view_therapists(request):
   if therapists:
     return render(request, 'mh_tracker/settings.html', {'therapists': None})
   else:
-    return render(request, 'mh_tracker/settings.html', {'therapists': therapists})
-
-  
-
-  
+    return render(request, 'mh_tracker/settings.html',
+                  {'therapists': therapists})
