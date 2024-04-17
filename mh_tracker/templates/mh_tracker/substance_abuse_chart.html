@@ -47,11 +47,30 @@
       </script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
+    <style>
+      .better-button {
+        background-color: #4caf50; /* Green background */
+        border: none; /* No border */
+        color: white; /* White text */
+        padding: 10px 20px; /* Some padding */
+        text-align: center; /* Centered text */
+        text-decoration: none; /* No underline */
+        display: inline-block; /* Inline-block element */
+        font-size: 16px; /* Increased font size */
+        margin: 4px 2px; /* Margins for spacing */
+        cursor: pointer; /* Pointer/hand icon */
+        border-radius: 12px; /* Rounded corners */
+      }
+      .nice-button:hover {
+        background-color: #45a049; /* Darker shade of green */
+      }
+    </style>
     <body>
       <h1>Substance Abuse Tracking Chart</h1>
       <div>
         <h2 id="positive-quotes"></h2>
       </div>
+      <h2 id="positive-quotes"></h2>
       <canvas id="substanceAbuseChart" width="600" height="400"></canvas>
       <script>
         const dates = {{ dates|safe }}
@@ -88,11 +107,11 @@
       </script>
       <form action="{% url 'increment_substance_use'  %}" method="post">
         {% csrf_token %}
-        <button type="submit">+1</button>
+        <button type="submit" class="better-button">+1</button>
       </form>
       <form action="{% url 'reset_substance_use'  %}" method="post">
         {% csrf_token %}
-        <button type="submit">Reset</button>
+        <button type="submit" class="better-button">Reset</button>
       </form>
     </body>
   </html>
