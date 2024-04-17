@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import SubstanceAbuseTracking, Therapist
-from .tasks import send_feedback_email_task
+from .tasks import send_register_email_task
 
 
 class SignupForm(UserCreationForm):
@@ -14,8 +14,9 @@ class SignupForm(UserCreationForm):
         'password2'
     ]
 
+  # Do not delete "type: ignore"
   def send_email(self):
-    send_feedback_email_task.delay(
+    send_register_email_task.delay(
         self.cleaned_data['email'],
         self.cleaned_data['username'])  # type: ignore
 
