@@ -115,7 +115,24 @@ def settings(request):
     return redirect('mh_tracker/home')
   else:
     #Render the form
-    return render(request, 'mh_tracker/settings.html')
+    #We need to send therapists to the settings page
+    therapists = Therapist.objects.all()
+    if therapists.exists():
+      print(therapists)
+      therapist_list = [{
+          'first_name': therapist.first_name,
+          'last_name': therapist.last_name,
+          'email': therapist.email,
+          'company': therapist.company,
+          'phone_number': therapist.phone_number
+      } for therapist in therapists]
+    else:
+      therapist_list = None
+
+    context = {
+        'therapist_list': therapist_list,
+    }
+    return render(request, 'mh_tracker/settings.html', context)
 
 
 @login_required
@@ -231,43 +248,43 @@ def userPage(request, user_id):
 
 
 def calendar_data(request):
-  journal_entries = JournalEntry.objects.filter(user=request.user).order_by('date_created')
+  journal_entries = JournalEntry.objects.filter(
+      user=request.user).order_by('date_created')
   events = []
   for entry in journal_entries:
-      events.append({
-          'title': 'Sleep: {}'.format(entry.sleep_quality),
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': '#FFA07A'
-      })
-      events.append({
-          'title': 'Exercise: {}'.format(entry.exercise_time),
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': '#90EE90'
-      })
-      events.append({
-          'title': 'Diet: {}'.format(entry.diet_quality),
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': '#87CEEB'
-      })
-      events.append({
-          'title': 'Water: {}'.format(entry.water_intake),
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': '#ADD8E6'
-      })
-      events.append({ 
-          'start': entry.date_created.strftime('%Y-%m-%d'),
-          'end': entry.date_created.strftime('%Y-%m-%d'),
-          'color': get_mood_color(entry.mood_level),
-          'display': 'background'
-      })
-  
+    events.append({
+        'title': 'Sleep: {}'.format(entry.sleep_quality),
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '#FFA07A'
+    })
+    events.append({
+        'title': 'Exercise: {}'.format(entry.exercise_time),
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '#90EE90'
+    })
+    events.append({
+        'title': 'Diet: {}'.format(entry.diet_quality),
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '#87CEEB'
+    })
+    events.append({
+        'title': 'Water: {}'.format(entry.water_intake),
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '#ADD8E6'
+    })
+    events.append({
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': get_mood_color(entry.mood_level),
+        'display': 'background'
+    })
+
   return JsonResponse(data=events, safe=False)
-  
-  
+
 
 def get_mood_color(mood_level):
   color_mapping = {
@@ -417,8 +434,11 @@ def send_email_report(request):
 # Add a therapist for the user to have
 def add_therapist(request):
   if request.method == 'POST':
-    therapist = TherapistForm(request.POST)
-    if therapist.is_valid():
+    therapist_form = TherapistForm(request.POST)
+    if therapist_form.is_valid():
+      therapist = therapist_form.save(commit=False)
+      #Assigning the logged in user to the therapist
+      therapist.user = request.user
       therapist.save()
       return redirect('home')
   else:

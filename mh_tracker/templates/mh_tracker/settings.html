@@ -40,28 +40,67 @@
   <div class="card">
     <div class="card-body">5:45 PM</div>
   </div>
+
+  <!--CheckBox for Secure Data Sharing -->
+
+  <!--Optional , list of therapist-->
+  {% if therapist_list %}
+
+  <div class="form-check form-switch">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      role="switch"
+      id="flexSwitchCheckDefault"
+    />
+    <label class="form-check-label" for="flexSwitchCheckDefault"
+      >Therapist Email Option</label
+    >
+    <p>
+      (Checking this option means that you are wanting to send a report to your
+      therapist when you request it)
+    </p>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Therapist First Name</th>
+        <th scope="col">Therapist Last Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Company</th>
+        <th scope="col">Phone Number</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for therapist in therapist_list %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <!-- forloop.counter gives the row number -->
+        <td>{{ therapist.first_name }}</td>
+        <td>{{ therapist.last_name }}</td>
+        <td>{{ therapist.email }}</td>
+        <td>{{ therapist.company }}</td>
+        <td>{{ therapist.phone_number }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>
+    No therapists found. <a href="{% url 'add_therapist' %}">Add a therapist</a>
+  </p>
+  {% endif %}
+
+  <a href="{% url 'logout' %}" class="btn btn-secondary">Log Out</a>
+
+  {% else %}
+  <h1>Login or Sign Up</h1>
+  <form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+  <a href="{% url 'signup' %}" class="btn btn-secondary">Sign Up</a>
+  {% endif %} {% endblock %}
 </div>
-
-<!--CheckBox for Secure Data Sharing -->
-
-<div class="form-check form-switch">
-  <input
-    class="form-check-input"
-    type="checkbox"
-    role="switch"
-    id="flexSwitchCheckDefault"
-  />
-  <label class="form-check-label" for="flexSwitchCheckDefault"
-    >Therapist Email Option</label
-  >
-</div>
-<a href="{% url 'logout' %}" class="btn btn-secondary">Log Out</a>
-
-{% else %}
-<h1>Login or Sign Up</h1>
-<form action="{% url 'login' %}" method="post">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-primary">Login</button>
-</form>
-<a href="{% url 'signup' %}" class="btn btn-secondary">Sign Up</a>
-{% endif %} {% endblock %}
