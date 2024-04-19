@@ -30,5 +30,5 @@ urlpatterns = [
     path('resources/', views.rescourcesPage, name='resources'),
     path('reports/', views.reports, name='reports'),
     path('add_therapist/', views.add_therapist, name='add_therapist'),
-    path('send_email_self/', views.send_email_report, name='send_email_self'),
+    path('send_email_report/', views.send_email_report, name='send_email_report'),
 ]

@@ -414,6 +414,12 @@ def reports(request):
     temp_data = data.filter(~Q(journal_text=""))
     context.update({"journal_entries_positive": temp_data.count()})
 
+    #Adds to auto check for Therapist checkbutton
+    #check_Bool = false
+    #if request.user.therapist_check:
+      #check_Bool = true
+    #context.update({"therapist_check" : check_Bool})
+
     return render(request, 'mh_tracker/reports.html', context)
   else:
     return redirect('mh_tracker/home.html')
@@ -424,9 +430,10 @@ def send_email_report(request):
   Subject = data.get('Subject')
   Message = data.get('Message')
   Emails = [request.user.email]
+  user_therapist = Therapist.objects.filter(user=request.user).last()
   #Sends an email to the user with the request information
-  if data.get('Therapist') and request.user.therapist is not None:
-    Emails.append(request.user.therapist.email)
+  if data.get('Therapist') and user_therapist is not None:
+    Emails.append(user_therapist.email)
   result = send_email_report_task(Subject, Message, Emails)
   return JsonResponse({'result': result})
 

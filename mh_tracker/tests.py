@@ -301,6 +301,29 @@ class ReportsTestCase(TestCase):
     self.assertEqual(response.context['journal_entries_negative'], 0)
     self.assertEqual(response.context['journal_entries_positive'], 0)
 
+  #Patch in the email and acts as it sends to only the user
+  @patch('mh_tracker.views.send_email_report')
+  def test_email_user(self, mock_send_email_report):
+    from mh_tracker.views import send_email_report
+    #Set up mock behavior
+    mock_send_email_report.return_value = 1
+
+    #Data necessary for the email report and jsonify it
+    data = {'Subject': 'Test Subject', 'Message': 'Test Message'}
+    data_setup = {'url': '', 'body': data}
+    json_data = json.dumps(data_setup)
+
+    #Trigger the code that sends the email
+    result = send_email_report(json_data)
+
+    #Assert that send_mail was called with the expected arguments
+    mock_send_email_report.assert_called_once_with(
+        '{"url": "", "body": {"Subject": "Test Subject", "Message": "Test Message"}}'
+    )
+
+    #Assert that email was sent
+    self.assertEqual(result, 1)
+
 
 class SubstanceAbuseChartTest(TestCase):
 

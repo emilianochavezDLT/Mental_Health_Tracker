@@ -70,6 +70,26 @@
     align-items: center;
   }
 
+  .container-monthly {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align: items; center
+    margin-right: 10px;
+  }
+
+  #modalButton {
+    margin-right: 10px;
+  }
+
+  #therapist {
+    margin-right: 3px;
+  }
+
+  #therapist-text {
+    margin-top: 10px;
+  }
+
   .container-cards {
     display: flex;
     flex-direction: row;
@@ -100,14 +120,25 @@
   <!-- Container for the cards to do with general stats -->
   <div class="container">
     <h2>Monthly Report</h2>
-    <!-- Email yourself the report -->
-    <button id="modalButton">Generate Report</button>
-    <input type="checkbox" id="therapist" name="therapist" value="Therapist" />
-    <label for="therapist">Include Therapist in Email</label><br />
-    <div id="reportModal" class="modal">
-      <div class="modal-content">
-        <p>Your report has been sent to your email!</p>
-        <span class="close">&times;</span>
+    <div class="container-monthly">
+      <!-- Email yourself the report -->
+      <button id="modalButton">Send Report Email</button>
+      <input
+        style="float: right"
+        class="therapist-checkbox"
+        type="checkbox"
+        id="therapist"
+        name="therapist"
+        value="Therapist"
+      />
+      <label id="therapist-text" for="therapist"
+        >Include Therapist in Email</label
+      ><br />
+      <div id="reportModal" class="modal">
+        <div class="modal-content">
+          <p>Your report has been sent to your email!</p>
+          <span class="close">&times;</span>
+        </div>
       </div>
     </div>
     <!-- Container to have two cards per row -->
@@ -242,7 +273,7 @@
   }
 
   btn.onclick = function () {
-    var sendEmailURL = "{% url 'send_email_self' %}";
+    var sendEmailURL = "{% url 'send_email_report' %}";
     var mail = {
       Subject: "Monthly Mental Health Tracker Report",
       Message: `For the past 31 days, you have had {{ mood_positive }} positive days and {{ mood_negative }} negative days. On positive days you averaged {{ sleepAvg_positive }} (1-5) energy from sleeping, {{ exerciseAvg_positive }} minutes of exercise, {{ dietAvg_positive }} (1-5) quality of diet, {{ waterAvg_positive }} cups of water, and did {{ journalAvg_entry }} do a journal entry.`,
