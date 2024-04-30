@@ -3,10 +3,8 @@ import datetime as datetime
 import json
 
 import requests
-from django.conf import settings as django_settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
 
 #from django_project.settings import EMAIL_HOST_PASSWORD_1, EMAIL_HOST_USER_1
 from django.db.models import Q
@@ -58,6 +56,8 @@ def user_signup(request):
 
 # login page
 def user_login(request):
+  if request.user.is_authenticated:
+    return redirect('settings')
   if request.method == 'POST':
     form = LoginForm(request.POST)
     if form.is_valid():
