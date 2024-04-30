@@ -429,7 +429,8 @@ def send_email_report(request):
   data = json.loads(request.body)
   Subject = data.get('Subject')
   Message = data.get('Message')
-  Message = Message.replace('you', request.user.first_name + ' ' + request.user.last_name)
+  Message = Message.replace(
+      'you', request.user.first_name + ' ' + request.user.last_name)
   Emails = [request.user.email]
   user_therapist = Therapist.objects.filter(user=request.user).last()
   #Sends an email to the user with the request information
