@@ -30,8 +30,8 @@ def home(request):
     d = datetime.date.today()
     print(f'date {d}')
     data = JournalEntry.objects.filter(user=userNow[0].id).last()
-    print(type(data.date_created))
-    if data.date_created == d:
+    print(data.date_created.date())
+    if data is not None and data.date_created.date() == d:
       entryTodayDone = 'true'
   quotes = []
   for i in range(5):
@@ -429,6 +429,7 @@ def send_email_report(request):
   data = json.loads(request.body)
   Subject = data.get('Subject')
   Message = data.get('Message')
+  Message = Message.replace('you', request.user.first_name + ' ' + request.user.last_name)
   Emails = [request.user.email]
   user_therapist = Therapist.objects.filter(user=request.user).last()
   #Sends an email to the user with the request information
