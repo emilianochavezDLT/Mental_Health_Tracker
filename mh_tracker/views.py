@@ -142,32 +142,35 @@ def analytics(request):
     return render(request, 'mh_tracker/analytics.html')
 
 
-@login_required
-def substance_abuse_chart(request):
+def substance_abuse_chart(request, year=None, month=None):
   user = request.user
-  start_date, end_date = current_month_date_range()
+  if year is None or month is None:
+    now = datetime.date.today()
+  else:
+    now = datetime.date(year=int(year), month=int(month), day=1)
+
+  start_date = now.replace(day=1)
+  end_date = now.replace(day=calendar.monthrange(now.year, now.month)[1])
   substance_data = SubstanceAbuseTracking.objects.filter(
       user=user, date__range=(start_date, end_date)).order_by('date')
 
-  # Create a dictionary mapping dates to counter values
   date_counter_map = {
       entry.date.strftime('%Y-%m-%d'): entry.counter
       for entry in substance_data
   }
 
-  # Generate all dates in the current month
   dates = [
       start_date + datetime.timedelta(days=x)
       for x in range((end_date - start_date).days + 1)
   ]
   dates_formatted = [date.strftime('%Y-%m-%d') for date in dates]
-
-  # Map each date to its counter, defaulting to 0 if not present
   counters = [date_counter_map.get(date, 0) for date in dates_formatted]
 
   context = {
       'dates': dates_formatted,
       'counters': counters,
+      'current_year': now.year,
+      'current_month': now.month,
   }
 
   return render(request, 'mh_tracker/substance_abuse_chart.html', context)
@@ -180,7 +183,6 @@ def current_month_date_range():
   return start_date, end_date
 
 
-@login_required
 def update_substance_use(request, action):
   if request.method == 'POST':
     today = now().date()
@@ -429,7 +431,8 @@ def send_email_report(request):
   data = json.loads(request.body)
   Subject = data.get('Subject')
   Message = data.get('Message')
-  Message = Message.replace('you', request.user.first_name + ' ' + request.user.last_name)
+  Message = Message.replace(
+      'you', request.user.first_name + ' ' + request.user.last_name)
   Emails = [request.user.email]
   user_therapist = Therapist.objects.filter(user=request.user).last()
   #Sends an email to the user with the request information
