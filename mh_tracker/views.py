@@ -29,7 +29,7 @@ def home(request):
     d = datetime.date.today()
     data = JournalEntry.objects.filter(user=userNow[0].id).last()
     if data is not None:
-      entryCmplt=data.entry_complete(d)
+      entryCmplt = data.entry_complete(d)
   #carousel api
   quotes = []
   for i in range(5):
@@ -183,6 +183,7 @@ def current_month_date_range():
   return start_date, end_date
 
 
+@login_required
 def update_substance_use(request, action):
   if request.method == 'POST':
     today = now().date()
