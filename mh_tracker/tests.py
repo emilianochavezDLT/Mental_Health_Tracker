@@ -325,24 +325,41 @@ class ReportsTestCase(TestCase):
     self.assertEqual(result, 1)
 
 
-class SubstanceAbuseChartTest(TestCase):
+class SubstanceAbuseTests(TestCase):
 
   def setUp(self):
-    # Create a test user
+    # Create test user
     self.user = User.objects.create_user(username='testuser', password='12345')
     self.client.login(username='testuser', password='12345')
 
-    # Optionally, create a SubstanceAbuseTracking instance for today if needed
-    today = timezone.now().date()
-    SubstanceAbuseTracking.objects.create(user=self.user,
-                                          date=today,
-                                          counter=0)
+  def test_model_integrity(self):
+    # Create SubstanceAbuseTracking instance
+    date = timezone.now().date()
+    SubstanceAbuseTracking.objects.create(user=self.user, date=date, counter=2)
+    instance = SubstanceAbuseTracking.objects.get(user=self.user, date=date)
+    self.assertEqual(instance.counter, 2)
 
-  def test_template_rendering_and_elements(self):
-    # The name 'substance_abuse_chart' is a placeholder, replace it with the actual name of your URL
+  def test_substance_abuse_chart_view(self):
     response = self.client.get(reverse('substance_abuse_chart'))
     self.assertEqual(response.status_code, 200)
+    self.assertTrue('dates' in response.context)
+    self.assertTrue('counters' in response.context)
 
-    # Check if the response contains specific elements
-    self.assertContains(response, 'canvas id="substanceAbuseChart"')
-    self.assertContains(response, '<h2 id="positive-quotes"></h2>', html=True)
+  def test_increment_substance_use(self):
+    self.client.post(reverse('increment_substance_use'))
+    entry = SubstanceAbuseTracking.objects.filter(user=self.user).last()
+    self.assertEqual(entry.counter,
+                     1)  # Assuming this is the first entry for today
+
+  def test_reset_substance_use(self):
+    # Ensure there is an entry to reset
+    self.client.post(reverse('increment_substance_use'))
+    self.client.post(reverse('reset_substance_use'))
+    entry = SubstanceAbuseTracking.objects.filter(user=self.user).last()
+    self.assertEqual(entry.counter, 0)
+
+  def test_url_mapping(self):
+    response = self.client.get(reverse('increment_substance_use'))
+    self.assertNotEqual(response.status_code, 404)
+    response = self.client.get(reverse('reset_substance_use'))
+    self.assertNotEqual(response.status_code, 404)
