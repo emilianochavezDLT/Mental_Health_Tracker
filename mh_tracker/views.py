@@ -142,6 +142,7 @@ def analytics(request):
     return render(request, 'mh_tracker/analytics.html')
 
 
+@login_required
 def substance_abuse_chart(request, year=None, month=None):
   user = request.user
   if year is None or month is None:
