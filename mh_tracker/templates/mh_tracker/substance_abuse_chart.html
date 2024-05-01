@@ -70,6 +70,10 @@
       <div>
         <h2 id="positive-quotes"></h2>
       </div>
+      <div>
+          <a href="{% url 'substance_abuse_chart' current_year current_month|add:"-1" %}" class="better-button">Previous Month</a>
+          <a href="{% url 'substance_abuse_chart' current_year current_month|add:"1" %}" class="better-button">Next Month</a>
+      </div>
       <h2 id="positive-quotes"></h2>
       <canvas id="substanceAbuseChart" width="600" height="400"></canvas>
       <script>
