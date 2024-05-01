@@ -10,9 +10,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_project.settings')
 
 app = Celery('django_project')
 
-# Using a string here means the worker doesn't have to serialize
+#Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
-# - namespace='CELERY' means all celery-related configuration keys
+#namespace='CELERY' means all celery-related configuration keys
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
@@ -22,13 +22,13 @@ def debug_task(self):
 
 
 app.conf.beat_schedule = {
-    # Executes everyday at 6:30 p.m.
-    'send_email_reminder': {
-        'task': 'send_reminder_email_task',
-        'schedule': crontab(minute='24', hour='2', day_of_week='0-6'),
+  # Executes everyday at 10:50am
+  'send_email_reminder': {
+    'task': 'send_reminder_email_task',
+    'schedule': crontab(minute='50', hour='16', day_of_week='0-6'),
     },
-  #just for testing beat works
-   'run-me-every-thirty-seconds': {
+  #for testing beat works
+  'thirty-second-tester': {
    'task': 'checker',
    'schedule': 30.0,
     },

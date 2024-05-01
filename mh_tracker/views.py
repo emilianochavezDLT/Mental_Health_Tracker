@@ -24,22 +24,21 @@ from .tasks import send_email_report_task
 
 # Create your views here.
 def home(request):
-  entryTodayDone = 'false'
+  #check if user has already done their journal entry
   userNow = User.objects.filter(username=request.user)
+  entryCmplt = 'false'
   if request.user.is_authenticated:
     d = datetime.date.today()
-    print(f'date {d}')
     data = JournalEntry.objects.filter(user=userNow[0].id).last()
-    print(data.date_created.date())
-    if data is not None and data.date_created.date() == d:
-      entryTodayDone = 'true'
+    entryCmplt=data.entry_complete(d)
+  #carousel api
   quotes = []
   for i in range(5):
     r = requests.get('https://zenquotes.io/api/random')
     quotes.append(r.json()[0]['h'])
   return render(request, 'mh_tracker/home.html', {
       'quotes': quotes,
-      'entryDoneToday': entryTodayDone
+      'entryDoneToday': entryCmplt
   })
 
 

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 
 class JournalEntry(models.Model):
@@ -14,6 +15,12 @@ class JournalEntry(models.Model):
 
   def __str__(self):
     return f"Journal Entry by {self.user.username} on {self.date_created.strftime('%m/%d/%Y')}"
+
+  def entry_complete(self, current_date):
+    if self.date_created.date() == current_date:
+      return 'true'
+    else:
+      return 'false'
 
 
 class SubstanceAbuseTracking(models.Model):

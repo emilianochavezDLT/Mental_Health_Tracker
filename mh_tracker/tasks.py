@@ -23,7 +23,6 @@ def send_register_email_task(email_address, username):
 @shared_task(name="send_reminder_email_task")
 def send_reminder_email_task():
     users=User.objects.exclude(username='admin')
-    print("===================here=================")
     for user in users:
       send_mail(
       'Journal Entry Reminder', #subject
