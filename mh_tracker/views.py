@@ -28,7 +28,8 @@ def home(request):
     d = datetime.date.today()
     print(f'date {d}')
     data = JournalEntry.objects.filter(user=userNow[0].id).last()
-    print(data.date_created.date())
+    if data is not None:
+      print(data.date_created.date())
     if data is not None and data.date_created.date() == d:
       entryTodayDone = 'true'
   quotes = []
