@@ -28,7 +28,8 @@ def home(request):
   if request.user.is_authenticated:
     d = datetime.date.today()
     data = JournalEntry.objects.filter(user=userNow[0].id).last()
-    entryCmplt=data.entry_complete(d)
+    if data is not None:
+      entryCmplt=data.entry_complete(d)
   #carousel api
   quotes = []
   for i in range(5):
