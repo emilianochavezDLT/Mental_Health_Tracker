@@ -54,15 +54,15 @@ incorporates models. -->
       <!-- Radio Button Area -->
       <fieldset>
         <div class="some-class">
-          <input type="radio" id="mood_one" name="mood_level" value="1" />
+          <input type="radio" id="mood_one" name="mood_level" value="1" {% if initial_data.mood_level == 1 %}checked{% endif %}/>
           <label for="mood_one">1</label>
-          <input type="radio" id="mood_two" name="mood_level" value="2" />
+          <input type="radio" id="mood_two" name="mood_level" value="2" {% if initial_data.mood_level == 2 %}checked{% endif %}/>
           <label for="mood_two">2</label>
-          <input type="radio" id="mood_three" name="mood_level" value="3" />
+          <input type="radio" id="mood_three" name="mood_level" value="3" {% if initial_data.mood_level == 3 %}checked{% endif %}/>
           <label for="mood_three">3</label>
-          <input type="radio" id="mood_four" name="mood_level" value="4" />
+          <input type="radio" id="mood_four" name="mood_level" value="4" {% if initial_data.mood_level == 4 %}checked{% endif %}/>
           <label for="mood_four">4</label>
-          <input type="radio" id="mood_five" name="mood_level" value="5" />
+          <input type="radio" id="mood_five" name="mood_level" value="5" {% if initial_data.mood_level == 5 %}checked{% endif %}/>
           <label for="mood_five">5</label>
         </div>
       </fieldset>
@@ -73,15 +73,15 @@ incorporates models. -->
       <!-- Radio Button Area -->
       <fieldset>
         <div class="some-class">
-          <input type="radio" id="sleep_one" name="sleep_quality" value="1" />
+          <input type="radio" id="sleep_one" name="sleep_quality" value="1" {% if initial_data.sleep_quality == 1 %}checked{% endif %}/>
           <label for="sleep_one">1</label>
-          <input type="radio" id="sleep_two" name="sleep_quality" value="2" />
+          <input type="radio" id="sleep_two" name="sleep_quality" value="2"  {% if initial_data.sleep_quality == 2 %}checked{% endif %}/>
           <label for="sleep_two">2</label>
-          <input type="radio" id="sleep_three" name="sleep_quality" value="3" />
+          <input type="radio" id="sleep_three" name="sleep_quality" value="3"  {% if initial_data.sleep_quality == 3 %}checked{% endif %}/>
           <label for="sleep_three">3</label>
-          <input type="radio" id="sleep_four" name="sleep_quality" value="4" />
+          <input type="radio" id="sleep_four" name="sleep_quality" value="4"  {% if initial_data.sleep_quality == 4 %}checked{% endif %}/>
           <label for="sleep_four">4</label>
-          <input type="radio" id="sleep_five" name="sleep_quality" value="5" />
+          <input type="radio" id="sleep_five" name="sleep_quality" value="5"  {% if initial_data.sleep_quality == 5 %}checked{% endif %}/>
           <label for="sleep_five">5</label>
         </div>
       </fieldset>
@@ -92,15 +92,15 @@ incorporates models. -->
       <!-- Radio Button Area -->
       <fieldset>
         <div class="some-class">
-          <input type="radio" id="diet_one" name="diet_quality" value="1" />
+          <input type="radio" id="diet_one" name="diet_quality" value="1"  {% if initial_data.diet_quality == 1 %}checked{% endif %}/>
           <label for="diet_one">1</label>
-          <input type="radio" id="diet_two" name="diet_quality" value="2" />
+          <input type="radio" id="diet_two" name="diet_quality" value="2" {% if initial_data.diet_quality == 2 %}checked{% endif %}/>
           <label for="diet_two">2</label>
-          <input type="radio" id="diet_three" name="diet_quality" value="3" />
+          <input type="radio" id="diet_three" name="diet_quality" value="3" {% if initial_data.diet_quality == 3 %}checked{% endif %}/>
           <label for="diet_three">3</label>
-          <input type="radio" id="diet_four" name="diet_quality" value="4" />
+          <input type="radio" id="diet_four" name="diet_quality" value="4" {% if initial_data.diet_quality == 4 %}checked{% endif %}/>
           <label for="diet_four">4</label>
-          <input type="radio" id="diet_five" name="diet_quality" value="5" />
+          <input type="radio" id="diet_five" name="diet_quality" value="5" {% if initial_data.diet_quality == 5 %}checked{% endif %}/>
           <label for="diet_five">5</label>
         </div>
       </fieldset>
@@ -138,7 +138,7 @@ incorporates models. -->
             min="0"
             max="150"
             value="75"
-            class="slider"
+            class="slider"/.
             id="exerciseRange"
             onchange="updateExercise(this.value)"
           />
