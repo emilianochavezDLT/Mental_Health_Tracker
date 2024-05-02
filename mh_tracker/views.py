@@ -77,22 +77,45 @@ def user_logout(request):
   logout(request)
   return redirect('home')
 
-
-#User can long in their journal entry
 @login_required
 def journal_entry(request):
-  if request.method == 'POST':
-    journal_Entry = JournalEntry(user=request.user,
-                                 mood_level=request.POST['mood_level'],
-                                 sleep_quality=request.POST['sleep_quality'],
-                                 exercise_time=request.POST['exercise_time'],
-                                 diet_quality=request.POST['diet_quality'],
-                                 water_intake=request.POST['water_intake'],
-                                 journal_text=request.POST['journal_text'])
-    journal_Entry.save()
-    return redirect('home')
-  else:
-    return render(request, 'mh_tracker/journal_entry.html')
+    current_user = request.user
+    current_date = now().date()
+
+    # Check if there's an existing entry for the current user and date
+    existing_entry = JournalEntry.objects.filter(user=current_user, date_created__date=current_date).first()
+
+    if request.method == 'POST':
+        # If there's an existing entry, update it; otherwise, create a new one
+        if existing_entry:
+            journal_Entry = existing_entry
+        else:
+            journal_Entry = JournalEntry(user=current_user)
+
+        # Update or create fields
+        journal_Entry.mood_level = request.POST.get('mood_level', 1)
+        journal_Entry.sleep_quality = request.POST.get('sleep_quality', 1)
+        journal_Entry.exercise_time = request.POST.get('exercise_time', 0)
+        journal_Entry.diet_quality = request.POST.get('diet_quality', 1)
+        journal_Entry.water_intake = request.POST.get('water_intake', 0)
+        journal_Entry.journal_text = request.POST.get('journal_text', '')
+
+        journal_Entry.save()
+        return redirect('home')
+    else:
+        # If there's an existing entry, load its data into the form
+        initial_data = {}
+        if existing_entry:
+            initial_data = {
+                'mood_level': existing_entry.mood_level,
+                'sleep_quality': existing_entry.sleep_quality,
+                'exercise_time': existing_entry.exercise_time,
+                'diet_quality': existing_entry.diet_quality,
+                'water_intake': existing_entry.water_intake,
+                'journal_text': existing_entry.journal_text
+            }
+
+        return render(request, 'mh_tracker/journal_entry.html', {'initial_data': initial_data})
 
 
 @login_required
