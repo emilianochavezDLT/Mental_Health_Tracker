@@ -278,13 +278,20 @@ def calendar_data(request):
         'color': '#ADD8E6'
     })
     events.append({
+        'title': 'Journal: {}'.format(entry.journal_text),
+        'start': entry.date_created.strftime('%Y-%m-%d'),
+        'end': entry.date_created.strftime('%Y-%m-%d'),
+        'color': '##E6E6E6'
+    })
+    events.append({
         'start': entry.date_created.strftime('%Y-%m-%d'),
         'end': entry.date_created.strftime('%Y-%m-%d'),
         'color': get_mood_color(entry.mood_level),
         'display': 'background'
     })
-
+  
   return JsonResponse(data=events, safe=False)
+
 
 
 def get_mood_color(mood_level):
